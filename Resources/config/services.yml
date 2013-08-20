@@ -1,0 +1,13 @@
+parameters:
+    tfox.pangalink.prefix_accounts: 'tfox.pangalink.accounts.'
+
+services:
+    tfox.pangalink.service:
+        class: TFox\PangalinkBundle\Service\PangalinkService
+        arguments: [ "@service_container" ]
+        
+    tfox.pangalink.twig_extension:
+        class: TFox\PangalinkBundle\Twig\PangalinkExtension
+        arguments: [ "@service_container", "@tfox.pangalink.service" ]
+        tags:
+            - { name: twig.extension }
