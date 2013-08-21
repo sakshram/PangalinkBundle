@@ -38,5 +38,10 @@ class BankResponse
 	{
 		return key_exists($key, $this->data) ? $this->data[$key] : null;
 	}
+	
+	public function getMac()
+	{
+		return $this->getParameter('VK_MAC');
+	}
 
 }

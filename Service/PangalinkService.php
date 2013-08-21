@@ -6,6 +6,7 @@ use TFox\PangalinkBundle\DependencyInjection\TFoxPangalinkExtension;
 use TFox\PangalinkBundle\Exception\AccountNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
 use TFox\PangalinkBundle\Response\BankResponse;
+use TFox\PangalinkBundle\Connector\SwedbankConnector;
 
 class PangalinkService 
 {
@@ -15,145 +16,79 @@ class PangalinkService
 	private $container;
 	
 	/**
+	 * 
+	 * @var array
+	 */
+	private $connectors;
+	
+	/**
 	 *
 	 * @var array
 	 */
 	private $configs;
 	
-	/**
-	 * ID of active bank
-	 * @var string
-	 */
-	private $accountId = 'default';
+	
+	
 	
 	public function __construct(Container $container)
 	{
-		$this->container = $container;		
+		$this->container = $container;
+		$this->connectors = array();		
 		$this->configs = array();
 	}
 	
 	/**
-	 * Set currenct bank
-	 * @param string $accountId bank name from configuration
+	 * Returns an instance of Connector for interaction with pangalink
+	 * @param string $accountId
+	 * @return 
 	 */
-	public function setBank($accountId)
+	public function getConnector($accountId = 'default')
 	{
-		$this->accountId = $accountId;
-		return $this;
-	}
-	
-	public function setDescription($value, $accountId = 'default')
-	{
-		$this->setCustomParameter('VK_MSG', $value, $accountId);
-		return $this;
-	}
-	
-	public function setAmount($value, $accountId = 'default')
-	{
-		$this->setCustomParameter('VK_AMOUNT', $value, $accountId);
-		return $this;
-	}
-	
-	public function setTransactionId($value, $accountId = 'default')
-	{
-		$this->setCustomParameter('VK_STAMP', $value, $accountId);
-		return $this;
-	}
-	
-	public function setLanguage($value, $accountId = 'default')
-	{
-		$this->setCustomParameter('VK_LANG', $value, $accountId);
-		return $this;
-	}
-	
-	public function setReturnUrl($value, $accountId = 'default')
-	{
-		$this->setCustomParameter('VK_RETURN', $value, $accountId);
-		return $this;
-	}
-	
-	public function setCancelUrl($value, $accountId = 'default')
-	{
-		$this->setCustomParameter('VK_CANCEL', $value, $accountId);
-		return $this;
-	}
-	
-	public function setReferenceNumber($value, $accountId = 'default')
-	{
-		$this->setCustomParameter('VK_REF', $value, $accountId);
-		return $this;
-	}
-	
-	public function setCustomParameter($key, $value, $accountId = 'default')
-	{
-		$this->setOptionValue($key, $value, $accountId);
-		return $this;
-	}
-	
-	public function getParameters($accountId = 'default')
-	{
-		$this->initConfig($accountId);
-		return $this->configs[$accountId];
-	}
-	
-	private function setOptionValue($key, $value, $accountId)
-	{
-		//Override default parameter
-		if($accountId == 'default' && $this->accountId != 'default') {
-			$accountId = $this->accountId;
-		}
+		if(key_exists($accountId, $this->connectors))
+			return $this->connectors[$accountId];
 		
+		$connector = null;
 		$this->initConfig($accountId);
-		$this->configs[$accountId][$key] = $value;
-	}
+		if(key_exists($accountId, $this->configs)) {
+			$accountData = $this->configs[$accountId];
+			if(!key_exists('bank', $accountData)) {
+				throw new \Exception(sprintf('PangalinkBundle configuration: missing mandatory parameter "bank" for account "%s"', $accountId));
+			}
+			$bankType = $accountData['bank'];
+			switch($bankType) {
+				case 'swedbank':
+					$connector = new SwedbankConnector($this, $accountId, $accountData);
+					break;
+				default:
+					throw new \Exception(sprintf('PangalinkBundle configuration: unknown bank type "%s" for account "%s"', $bankType, $accountId));
+					break;
+			}
+		} else {
+			throw new AccountNotFoundException($accountId);
+		}
+		$this->connectors[$accountId] = $connector;
+		return $connector;
+	}		
 	
 	private function initConfig($accountId)
 	{
+		if(isset($this->configs[$accountId]))
+			return;
+		
 		//Configuration not found: load it from container parameters
-		if(!isset($this->configs[$accountId])) {
-			$config = array();
-				
-			$containerKey = TFoxPangalinkExtension::PREFIX_CONTAINER_ACCOUNTS.$accountId;
-			if(!$this->container->hasParameter($containerKey))
-				throw new AccountNotFoundException($accountId);
-				
-			$params = $this->container->getParameter($containerKey);
+		$config = array();
 			
-			$this->configs[$accountId] = $config;
-		}
+		$containerKey = TFoxPangalinkExtension::PREFIX_CONTAINER_ACCOUNTS.$accountId;
+		if(!$this->container->hasParameter($containerKey))
+			throw new AccountNotFoundException($accountId);
+			
+		$config = $this->container->getParameter($containerKey);
+		$this->configs[$accountId] = $config;
 	}
 	
-	/**
-	 * Processes payment information when "Return to vendor" button is clicked
-	 */
-	public function processPayment(Request $request)
+	public function getKernelRootPath()
 	{
-		$response = new BankResponse($request);
-		
-		
-		echo "<pre>";
-		
-		var_dump($response->getData());
-		echo "</pre>";
-	}
-	
-	public function generateMacString ($accountData, $input)
-	{
-		$keys = array('VK_SERVICE', 'VK_VERSION', 'VK_SND_ID', 'VK_STAMP',
-				'VK_AMOUNT', 'VK_CURR', 'VK_ACC', 'VK_NAME',
-				'VK_REF', 'VK_MSG');
-	
-		$data = '';
-		foreach ($keys as $key) {
-			if(!key_exists($key, $input))
-				continue;
-			 
-			$value = $input[$key];
-			$length = mb_strlen ($value, $accountData['charset']);
-			$data .= str_pad ($length, 3, '0', STR_PAD_LEFT) . $value;
-		}
-	
-		return $data;
+		return $this->container->getParameter('kernel.root_dir');
 	}
 
 }

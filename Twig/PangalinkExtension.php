@@ -9,11 +9,6 @@ use TFox\PangalinkBundle\Exception\CannotGenerateSignatureException;
 class PangalinkExtension extends \Twig_Extension 
 {
 
-	/**
-	 * 
-	 * @var \Symfony\Component\DependencyInjection\Container
-	 */
-	private $container;
 	
 	/**
 	 * 
@@ -22,9 +17,8 @@ class PangalinkExtension extends \Twig_Extension
 	private $service;
 	
 	
-	public function  __construct(Container $container, \TFox\PangalinkBundle\Service\PangalinkService $service)
+	public function  __construct(\TFox\PangalinkBundle\Service\PangalinkService $service)
 	{
-		$this->container = $container;
 		$this->service = $service;
 	}
 	
@@ -48,7 +42,7 @@ class PangalinkExtension extends \Twig_Extension
 	public function printFormInputs($accountId = 'default')
 	{
 		$accountData = $this->getAccountData($accountId);
-		$serviceAccountData = $this->service->getParameters($accountId);
+		$serviceAccountData = $this->service->getConnector($accountId)->getConfiguration();
 		$accountData = array_merge($accountData, $serviceAccountData);
 		
 		$formData = array(
@@ -73,10 +67,11 @@ class PangalinkExtension extends \Twig_Extension
 		
 		//Add a MAC string
 		$password = key_exists('private_key_password', $accountData) ? $accountData['private_key_password'] : null;
-		$privateKeyPath = $this->container->getParameter('kernel.root_dir').'/'.$accountData['private_key'];
+		$privateKeyPath = $this->service->getKernelRootPath().'/'.$accountData['private_key'];
 		$privateKey = file_get_contents($privateKeyPath);
 		$key = openssl_pkey_get_private($privateKey, $password);		
-		$macString = $this->service->generateMacString($accountData, $formData);
+// 		$macString = $this->service->generateMacString($accountData, $formData);
+		$macString = $this->service->getConnector($accountId)->generateMacString($formData);
 		if (!openssl_sign ($macString, $signature, $key, OPENSSL_ALGO_SHA1)) {
 			throw new CannotGenerateSignatureException();
 		}		
@@ -109,10 +104,9 @@ class PangalinkExtension extends \Twig_Extension
 	 */
 	private function getAccountData($accountId)
 	{
-		$containerKey = TFoxPangalinkExtension::PREFIX_CONTAINER_ACCOUNTS.$accountId;
-		if(!$this->container->hasParameter($containerKey))
-			throw new AccountNotFoundException($accountId);
-		$accountData = $this->container->getParameter($containerKey);
-		return $accountData;
+		/* @var $connector \TFox\PangalinkBundle\Connector\AbstractConnector */
+		$connector = $this->service->getConnector($accountId);
+		$configuration = $connector->getConfiguration();
+		return $configuration;
 	} 
 }
