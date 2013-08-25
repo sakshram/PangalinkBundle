@@ -8,6 +8,6 @@ services:
         
     tfox.pangalink.twig_extension:
         class: TFox\PangalinkBundle\Twig\PangalinkExtension
-        arguments: [ "@tfox.pangalink.service", "@router" ]
+        arguments: [ "@tfox.pangalink.service" ]
         tags:
             - { name: twig.extension }

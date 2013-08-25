@@ -15,19 +15,11 @@ class PangalinkExtension extends \Twig_Extension
 	 * @var \TFox\PangalinkBundle\Service\PangalinkService
 	 */
 	private $service;
+
 	
-	/**
-	 *
-	 * @var \Symfony\Bundle\FrameworkBundle\Routing\Router
-	 */
-	private $router;
-	
-	public function  __construct(\TFox\PangalinkBundle\Service\PangalinkService $service,
-			\Symfony\Bundle\FrameworkBundle\Routing\Router $router)
+	public function  __construct(\TFox\PangalinkBundle\Service\PangalinkService $service)
 	{
-		$this->service = $service;
-		$this->router = $router;
-		
+		$this->service = $service;		
 	}
 	
 	public function getFunctions()

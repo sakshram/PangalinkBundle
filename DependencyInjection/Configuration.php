@@ -38,8 +38,6 @@ class Configuration implements ConfigurationInterface
 				        	->scalarNode('url_cancel')->end()
 				        	->scalarNode('route_return')->end()
 				        	->scalarNode('route_cancel')->end()
-				        	->scalarNode('route_return_secure')->end()
-				        	->scalarNode('route_cancel_secure')->end()
 				        	->scalarNode('language')->end()
 				        ->end()
 					->end()

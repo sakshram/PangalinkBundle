@@ -7,6 +7,7 @@ use TFox\PangalinkBundle\Exception\CertificateNotFoundException;
 use TFox\PangalinkBundle\Exception\BadSignatureException;
 use TFox\PangalinkBundle\Exception\UnsupportedServiceIdException;
 use TFox\PangalinkBundle\Exception\CannotGenerateSignatureException;
+use TFox\PangalinkBundle\Exception\MissingMandatoryParameterException;
 /**
  * Common bank connection routine
  *
@@ -45,11 +46,25 @@ class AbstractConnector
 	public function __construct($pangalinkService, $accountId, $configuration)
 	{
 		$this->accountId = $accountId;
+		$this->pangalinkService = $pangalinkService;
 		if(is_array($this->configuration))
 			$this->configuration = array_merge($this->configuration, $configuration);			
 		else
 			$this->configuration = $configuration;
-		$this->pangalinkService = $pangalinkService;
+		
+		/*
+		 * Handle return URL and cancel URL parameters
+		 */
+		if(key_exists('route_return', $this->configuration)) {
+			$this->configuration['url_return'] = $this->pangalinkService->getRouter()->generate($this->configuration['route_return'], array(), true);
+		}
+		if(key_exists('route_cancel', $this->configuration)) {
+			$this->configuration['url_cancel'] = $this->pangalinkService->getRouter()->generate($this->configuration['route_cancel'], array(), true);
+		}
+		if(!(key_exists('url_return', $this->configuration)))
+			throw new MissingMandatoryParameterException('url_return');
+		if(!key_exists('url_cancel', $this->configuration))
+			throw new MissingMandatoryParameterException('url_cancel');		
 		
 		$this->macKeys = array(
 			1001 => array(

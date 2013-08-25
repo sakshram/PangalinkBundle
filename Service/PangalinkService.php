@@ -27,12 +27,17 @@ class PangalinkService
 	 */
 	private $configs;
 	
-	
+	/**
+	 *
+	 * @var \Symfony\Bundle\FrameworkBundle\Routing\Router
+	 */
+	private $router;
 	
 	
 	public function __construct(Container $container)
 	{
 		$this->container = $container;
+		$this->router = $this->container->get('router');
 		$this->connectors = array();		
 		$this->configs = array();
 	}
@@ -89,6 +94,15 @@ class PangalinkService
 	public function getKernelRootPath()
 	{
 		return $this->container->getParameter('kernel.root_dir');
+	}
+	
+
+	/**
+	 * @return \Symfony\Bundle\FrameworkBundle\Routing\Router
+	 */
+	public function getRouter()
+	{
+		return $this->router;
 	}
 
 }
