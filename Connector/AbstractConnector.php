@@ -6,6 +6,7 @@ use TFox\PangalinkBundle\Response\BankResponse;
 use TFox\PangalinkBundle\Exception\CertificateNotFoundException;
 use TFox\PangalinkBundle\Exception\BadSignatureException;
 use TFox\PangalinkBundle\Exception\UnsupportedServiceIdException;
+use TFox\PangalinkBundle\Exception\CannotGenerateSignatureException;
 /**
  * Common bank connection routine
  *
@@ -147,9 +148,44 @@ class AbstractConnector
 		$this->configuration[$key] = $value;
 	}
 	
-	public function getFormData()
-	{
+	/**
+	 * Generates an array with form data to paste it into the form
+	 * @throws CannotGenerateSignatureException
+	 * @return array
+	 */
+	public function generateFormData()
+	{		
+		$accountData = $this->getConfiguration();
 		
+		$formData = array(
+				'VK_SERVICE' => $accountData['service_id'],
+				'VK_VERSION' => $accountData['version'],
+				'VK_SND_ID' => $accountData['vendor_id'],
+				'VK_STAMP' => $accountData['transaction_id'],
+				'VK_AMOUNT' => $accountData['amount'],
+				'VK_CURR' => $accountData['currency'],
+				'VK_ACC' => $accountData['account_number'],
+				'VK_NAME' => $accountData['account_owner'],
+				'VK_MSG' => $accountData['description'],
+				'VK_RETURN' => $accountData['url_return'],
+				'VK_CANCEL' => $accountData['url_cancel'],
+				'VK_ENCODING' => $accountData['charset'],
+				'VK_LANG' => $accountData['language'],
+				'VK_REF' => $accountData['reference_number'],
+		);
+		
+		//Add a MAC string
+		$password = key_exists('private_key_password', $accountData) ? $accountData['private_key_password'] : null;
+		$privateKeyPath = $this->pangalinkService->getKernelRootPath().'/'.$accountData['private_key'];
+		$privateKey = file_get_contents($privateKeyPath);
+		$key = openssl_pkey_get_private($privateKey, $password);
+		$macString = $this->pangalinkService->getConnector($this->accountId)->generateMacString($formData);
+		if (!openssl_sign ($macString, $signature, $key, OPENSSL_ALGO_SHA1)) {
+			throw new CannotGenerateSignatureException();
+		}
+		$formData['VK_MAC'] = base64_encode ($signature);
+		
+		return $formData;
 	}
 	
 	public function generateMacString($input)
