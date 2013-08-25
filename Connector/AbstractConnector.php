@@ -18,6 +18,7 @@ class AbstractConnector
 	protected $accountId;
 	
 	/**
+	 * Configuration parameters array.
 	 * @var array
 	 */
 	protected $configuration;
@@ -43,7 +44,10 @@ class AbstractConnector
 	public function __construct($pangalinkService, $accountId, $configuration)
 	{
 		$this->accountId = $accountId;
-		$this->configuration = $configuration;
+		if(is_array($this->configuration))
+			$this->configuration = array_merge($this->configuration, $configuration);			
+		else
+			$this->configuration = $configuration;
 		$this->pangalinkService = $pangalinkService;
 		
 		$this->macKeys = array(
@@ -87,19 +91,19 @@ class AbstractConnector
 	
 	public function setDescription($value)
 	{
-		$this->setCustomParameter('VK_MSG', $value);
+		$this->setCustomParameter('description', $value);
 		return $this;
 	}
 	
 	public function setAmount($value)
 	{
-		$this->setCustomParameter('VK_AMOUNT', $value);
+		$this->setCustomParameter('amount', $value);
 		return $this;
 	}
 	
 	public function setTransactionId($value)
 	{
-		$this->setCustomParameter('VK_STAMP', $value);
+		$this->setCustomParameter('transaction_id', $value);
 		return $this;
 	}
 	
@@ -141,6 +145,11 @@ class AbstractConnector
 	private function setOptionValue($key, $value)
 	{
 		$this->configuration[$key] = $value;
+	}
+	
+	public function getFormData()
+	{
+		
 	}
 	
 	public function generateMacString($input)

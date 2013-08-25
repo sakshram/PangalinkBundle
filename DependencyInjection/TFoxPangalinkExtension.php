@@ -16,7 +16,7 @@ class TFoxPangalinkExtension extends Extension
 {
 	const PREFIX_CONTAINER_ACCOUNTS = 'tfox.pangalink.accounts.';
 	
-	const DEFAULT_CHARSET = 'utf-8';
+	//const DEFAULT_CHARSET = 'utf-8';
 	
     /**
      * {@inheritDoc}
@@ -29,15 +29,7 @@ class TFoxPangalinkExtension extends Extension
         $accounts = key_exists('accounts', $config) ? $config['accounts'] : array();
         foreach($accounts as $accountId => $account) {
         	$parameters = array();
-        	$containerKey = self::PREFIX_CONTAINER_ACCOUNTS.$accountId;
-        	
-        	
-			$url = key_exists('service_url', $account) ? $account['service_url'] : null;
-        	$parameters['service_url'] = $url;
-        	$charset = key_exists('charset', $account) ? $account['charset'] : self::DEFAULT_CHARSET;
-        	$parameters['charset'] = $charset;
-        	$keyPwd = key_exists('private_key_password', $account) ? $account['private_key_password'] : null;
-        	$parameters['private_key_password'] =  $keyPwd;
+        	$containerKey = self::PREFIX_CONTAINER_ACCOUNTS.$accountId;        	
         	
         	//Iterate through all mandatory parameters
         	$mandatoryParameters = array('account_number', 'account_owner', 'private_key', 'bank_certificate', 'vendor_id');

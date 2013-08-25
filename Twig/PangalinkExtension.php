@@ -16,10 +16,18 @@ class PangalinkExtension extends \Twig_Extension
 	 */
 	private $service;
 	
+	/**
+	 *
+	 * @var \Symfony\Bundle\FrameworkBundle\Routing\Router
+	 */
+	private $router;
 	
-	public function  __construct(\TFox\PangalinkBundle\Service\PangalinkService $service)
+	public function  __construct(\TFox\PangalinkBundle\Service\PangalinkService $service,
+			\Symfony\Bundle\FrameworkBundle\Routing\Router $router)
 	{
 		$this->service = $service;
+		$this->router = $router;
+		
 	}
 	
 	public function getFunctions()
@@ -33,7 +41,7 @@ class PangalinkExtension extends \Twig_Extension
 			)
 		);
 	}
-	
+
 	public function getName()
 	{
 		return 'pangalink_swedbank_extension';
@@ -41,36 +49,31 @@ class PangalinkExtension extends \Twig_Extension
 	
 	public function printFormInputs($accountId = 'default')
 	{
-		$accountData = $this->getAccountData($accountId);
-		$serviceAccountData = $this->service->getConnector($accountId)->getConfiguration();
-		$accountData = array_merge($accountData, $serviceAccountData);
+		$connector = $this->service->getConnector($accountId);
+		$accountData = $connector->getConfiguration();
 		
 		$formData = array(
-			'VK_SERVICE' => '1001',
-			'VK_VERSION' => '008',
+			'VK_SERVICE' => $accountData['service_id'],
+			'VK_VERSION' => $accountData['version'],
 			'VK_SND_ID' => $accountData['vendor_id'],
-			'VK_STAMP' => $accountData['VK_STAMP'],
-			'VK_AMOUNT' => $accountData['VK_AMOUNT'],
-			'VK_CURR' => 'EUR',
+			'VK_STAMP' => $accountData['transaction_id'],
+			'VK_AMOUNT' => $accountData['amount'],
+			'VK_CURR' => $accountData['currency'],
 			'VK_ACC' => $accountData['account_number'],
 			'VK_NAME' => $accountData['account_owner'],
-			'VK_MSG' => $accountData['VK_MSG'],
+			'VK_MSG' => $accountData['description'],
 			'VK_RETURN' => $accountData['url_return'],
 			'VK_CANCEL' => $accountData['url_cancel'],
-			'VK_ENCODING' => 'UTF-8'		
+			'VK_ENCODING' => $accountData['charset'],
+			'VK_LANG' => $accountData['language'],
+			'VK_REF' => $accountData['reference_number'],
 		);
-		
-		//Some optional parameters
-		$formData['VK_LANG'] = key_exists('VK_LANG', $accountData) ? $accountData['VK_LANG'] : 'EST';
-		//Reference number is empty if not defined
-		$formData['VK_REF'] = key_exists('VK_REF', $accountData) ? $accountData['VK_REF'] : '';
 		
 		//Add a MAC string
 		$password = key_exists('private_key_password', $accountData) ? $accountData['private_key_password'] : null;
 		$privateKeyPath = $this->service->getKernelRootPath().'/'.$accountData['private_key'];
 		$privateKey = file_get_contents($privateKeyPath);
 		$key = openssl_pkey_get_private($privateKey, $password);		
-// 		$macString = $this->service->generateMacString($accountData, $formData);
 		$macString = $this->service->getConnector($accountId)->generateMacString($formData);
 		if (!openssl_sign ($macString, $signature, $key, OPENSSL_ALGO_SHA1)) {
 			throw new CannotGenerateSignatureException();
@@ -91,22 +94,8 @@ class PangalinkExtension extends \Twig_Extension
 	 */
 	public function getActionUrl($accountId = 'default')
 	{
-		$accountData = $this->getAccountData($accountId);
+		$accountData = $this->service->getConnector($accountId)->getConfiguration();
 		$url = $accountData['service_url'];
 		return $url;
 	}
-	
-	/**
-	 * Get array with payment
-	 * @param unknown $accountId
-	 * @throws AccountNotFoundException
-	 * @return Ambigous <\Symfony\Component\DependencyInjection\mixed, \Symfony\Component\DependencyInjection\ParameterBag\mixed>
-	 */
-	private function getAccountData($accountId)
-	{
-		/* @var $connector \TFox\PangalinkBundle\Connector\AbstractConnector */
-		$connector = $this->service->getConnector($accountId);
-		$configuration = $connector->getConfiguration();
-		return $configuration;
-	} 
 }
