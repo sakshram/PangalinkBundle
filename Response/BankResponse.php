@@ -43,5 +43,43 @@ class BankResponse
 	{
 		return $this->getParameter('VK_MAC');
 	}
+	
+	public function getOrderNumber()
+	{
+		return $this->getParameter('VK_T_NO');
+	}
+	
+	public function getSenderName()
+	{
+		return $this->getParameter('VK_SND_NAME');
+	}
+	
+	public function getSenderAccountNumber()
+	{
+		return $this->getParameter('VK_SND_ACC');
+	}
+	
+	public function getAmount()
+	{
+		return $this->getParameter('VK_AMOUNT');
+	}
+	
+	public function getCurrency()
+	{
+		return $this->getParameter('VK_CURR');
+	}
+	
+	public function getReferenceNumber()
+	{
+		return $this->getParameter('VK_REF');
+	}
+	
+	public function getOrderDate()
+	{
+		$date = \DateTime::createFromFormat('d.m.Y H:i:s', $this->getParameter('VK_T_TIME'));
+		if(!($date instanceof \DateTime))
+			$date = null;
+		return $date;
+	}
 
 }
