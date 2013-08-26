@@ -7,6 +7,7 @@ use TFox\PangalinkBundle\Exception\AccountNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
 use TFox\PangalinkBundle\Response\BankResponse;
 use TFox\PangalinkBundle\Connector\SwedbankConnector;
+use TFox\PangalinkBundle\Connector\SebbankConnector;
 
 class PangalinkService 
 {
@@ -63,6 +64,9 @@ class PangalinkService
 			switch($bankType) {
 				case 'swedbank':
 					$connector = new SwedbankConnector($this, $accountId, $accountData);
+					break;
+				case 'seb':
+					$connector = new SebbankConnector($this, $accountId, $accountData);
 					break;
 				default:
 					throw new \Exception(sprintf('PangalinkBundle configuration: unknown bank type "%s" for account "%s"', $bankType, $accountId));

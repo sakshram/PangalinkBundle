@@ -190,10 +190,10 @@ class AbstractConnector
 				'VK_MSG' => $accountData['description'],
 				'VK_RETURN' => $accountData['url_return'],
 				'VK_CANCEL' => $accountData['url_cancel'],
-				'VK_ENCODING' => $accountData['charset'],
 				'VK_LANG' => $accountData['language'],
 				'VK_REF' => $accountData['reference_number'],
 		);
+		$formData = $this->addSpecificFormData($formData);
 		
 		//Add a MAC string
 		$password = key_exists('private_key_password', $accountData) ? $accountData['private_key_password'] : null;
@@ -208,6 +208,11 @@ class AbstractConnector
 		
 		return $formData;
 	}
+	
+	/**
+	 * Adds data which might be specific for each bank (encoding, ...)
+	 */
+	public function addSpecificFormData($formData) { return $formData; }
 	
 	public function generateMacString($input)
 	{

@@ -32,4 +32,11 @@ class SwedbankConnector extends AbstractConnector
 		
 		parent::__construct($pangalinkService, $accountId, $configuration);
 	}
+	
+	public function addSpecificFormData($formData) {
+		$accountData = $this->getConfiguration();
+		$formData['VK_ENCODING'] = $accountData['charset'];
+		
+		return $formData; 
+	}
 }
