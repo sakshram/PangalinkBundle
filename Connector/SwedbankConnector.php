@@ -21,6 +21,15 @@ class SwedbankConnector extends AbstractConnector
 			'language' => 'EST'	
 		);
 		
+		$prefix = 'bundles/tfoxpangalink/img/';
+		$this->buttonImages = array(
+			'88x31' => $prefix.'swed_logo_88x31.gif',
+			'120x60' => $prefix.'swed_logo_120x60.gif',
+			'217x31_est' => $prefix.'swed_logo_217x31_est.gif',
+			'217x31_rus' => $prefix.'swed_logo_217x31_rus.gif',
+			'217x31_eng' => $prefix.'swed_logo_217x31_eng.gif'
+		);
+		
 		parent::__construct($pangalinkService, $accountId, $configuration);
 	}
 }

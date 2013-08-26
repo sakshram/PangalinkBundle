@@ -38,6 +38,12 @@ class AbstractConnector
 	protected $macKeys;
 	
 	/**
+	 * An array where keys are image IDs and values are relative paths to images
+	 * @var array
+	 */
+	protected $buttonImages;
+	
+	/**
 	 * 
 	 * @var \TFox\PangalinkBundle\Response\BankResponse
 	 */
@@ -241,5 +247,16 @@ class AbstractConnector
 	public function isPaymentSuccessful()
 	{
 		return ((!is_null($this->bankResponse)) && ($this->bankResponse->getParameter('VK_SERVICE') == '1101'));
+	}
+	
+	/**
+	 * Returns an address of image from assets
+	 * This address is not absolute and must be handled with assets helper
+	 * @param string $imageId
+	 * @return string
+	 */
+	public function getButtonImage($imageId)
+	{
+		return key_exists($imageId, $this->buttonImages) ? $this->buttonImages[$imageId] : '';
 	}
 }

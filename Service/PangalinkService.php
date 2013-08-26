@@ -105,4 +105,8 @@ class PangalinkService
 		return $this->router;
 	}
 
+	public function getContainer()
+	{
+		return $this->container;
+	}
 }

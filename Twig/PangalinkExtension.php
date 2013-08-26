@@ -16,10 +16,16 @@ class PangalinkExtension extends \Twig_Extension
 	 */
 	private $service;
 
-	
+	/**
+	 * 
+	 * @var \Symfony\Component\Templating\Helper\CoreAssetsHelper
+	 */
+	private $assetsHelper;
+
 	public function  __construct(\TFox\PangalinkBundle\Service\PangalinkService $service)
 	{
-		$this->service = $service;		
+		$this->service = $service;
+		$this->assetsHelper = $this->service->getContainer()->get('templating.helper.assets');
 	}
 	
 	public function getFunctions()
@@ -30,7 +36,10 @@ class PangalinkExtension extends \Twig_Extension
 			),
 			'pangalink_action_url' => new \Twig_Function_Method($this, 'getActionUrl',
 					array('is_safe' => array('html'))
-			)
+			),
+			'pangalink_button' => new \Twig_Function_Method($this, 'printButtonCode',
+					array('is_safe' => array('html'))
+			),
 		);
 	}
 
@@ -60,5 +69,34 @@ class PangalinkExtension extends \Twig_Extension
 		$accountData = $this->service->getConnector($accountId)->getConfiguration();
 		$url = $accountData['service_url'];
 		return $url;
+	}
+	
+	/**
+	 * Return a code for form with submit graphic button
+	 * @param string $accountId
+	 */
+	public function printButtonCode($accountId = 'default', $imageId)
+	{
+		/* @var $connector \TFox\PangalinkBundle\Connector\AbstractConnector */
+		$connector = $this->service->getConnector($accountId);
+		$imageRelPath = $connector->getButtonImage($imageId);		
+		$imageFullPath = $this->assetsHelper->getUrl($imageRelPath);
+		
+		$actionUrl = $this->getActionUrl($accountId);
+		$inputFieldsHtml = $this->printFormInputs($accountId);
+		$formId = 'form_pangalink_'.substr(md5(mt_rand(1, 9999999)), 0, 10);
+		
+		$html = <<<HTML
+<form method="post" action="%ACTION%" id="%FORM_ID%">
+%FIELDS%
+<a href="#" onclick="document.getElementById('%FORM_ID%').submit()"><img src="%IMAGE%" style="border: 0px"></a>
+</form>
+HTML;
+		
+		return str_replace(
+				array('%ACTION%', '%FIELDS%', '%IMAGE%', '%FORM_ID%'),
+				array($actionUrl, $inputFieldsHtml, $imageFullPath, $formId),
+				$html);
+		
 	}
 }
