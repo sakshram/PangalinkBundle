@@ -49,6 +49,8 @@ class AbstractConnector
 	 */
 	protected $bankResponse = null;
 	
+	protected $assetImagesPrefix = 'bundles/tfoxpangalink/img/';
+	
 	public function __construct($pangalinkService, $accountId, $configuration)
 	{
 		$this->accountId = $accountId;
@@ -228,7 +230,7 @@ class AbstractConnector
 				continue;
 	
 			$value = $input[$key];
-			$length = mb_strlen ($value, $this->configuration['charset']);
+			$length = strlen ($value);
 			$data .= str_pad ($length, 3, '0', STR_PAD_LEFT) . $value;
 		}
 	

@@ -21,13 +21,12 @@ class SwedbankConnector extends AbstractConnector
 			'language' => 'EST'	
 		);
 		
-		$prefix = 'bundles/tfoxpangalink/img/';
 		$this->buttonImages = array(
-			'88x31' => $prefix.'swed_logo_88x31.gif',
-			'120x60' => $prefix.'swed_logo_120x60.gif',
-			'217x31_est' => $prefix.'swed_logo_217x31_est.gif',
-			'217x31_rus' => $prefix.'swed_logo_217x31_rus.gif',
-			'217x31_eng' => $prefix.'swed_logo_217x31_eng.gif'
+			'88x31' => $this->assetImagesPrefix.'swed_logo_88x31.gif',
+			'120x60' => $this->assetImagesPrefix.'swed_logo_120x60.gif',
+			'217x31_est' => $this->assetImagesPrefix.'swed_logo_217x31_est.gif',
+			'217x31_rus' => $this->assetImagesPrefix.'swed_logo_217x31_rus.gif',
+			'217x31_eng' => $this->assetImagesPrefix.'swed_logo_217x31_eng.gif'
 		);
 		
 		parent::__construct($pangalinkService, $accountId, $configuration);
@@ -38,5 +37,30 @@ class SwedbankConnector extends AbstractConnector
 		$formData['VK_ENCODING'] = $accountData['charset'];
 		
 		return $formData; 
+	}
+	
+	/**
+	 * Overriden due to use of another function for string length calculation
+	 * @see \TFox\PangalinkBundle\Connector\AbstractConnector::generateMacString()
+	 */
+	public function generateMacString($input)
+	{
+		$serviceId = key_exists('VK_SERVICE', $input) ? $input['VK_SERVICE'] : -1;
+	
+		$keys = key_exists($serviceId, $this->macKeys) ? $this->macKeys[$serviceId] : null;
+		if(is_null($keys))
+			throw new UnsupportedServiceIdException($this->accountId, $serviceId);
+	
+		$data = '';
+		foreach ($keys as $key) {
+			if(!key_exists($key, $input))
+				continue;
+	
+			$value = $input[$key];
+			$length = mb_strlen ($value, $this->configuration['charset']);
+			$data .= str_pad ($length, 3, '0', STR_PAD_LEFT) . $value;
+		}
+	
+		return $data;
 	}
 }

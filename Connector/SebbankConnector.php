@@ -21,8 +21,10 @@ class SebbankConnector extends AbstractConnector
 			'language' => 'EST'	
 		);
 		
-		$prefix = 'bundles/tfoxpangalink/img/';
-		$this->buttonImages = array();
+		$this->buttonImages = array(
+			'88x31' => $this->assetImagesPrefix.'seb_88x31.gif',
+			'120x60' => $this->assetImagesPrefix.'seb_120x60.gif'
+		);
 		
 		parent::__construct($pangalinkService, $accountId, $configuration);
 	}
