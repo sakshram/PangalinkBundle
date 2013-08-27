@@ -84,7 +84,7 @@ class PangalinkExtension extends \Twig_Extension
 		
 		$actionUrl = $this->getActionUrl($accountId);
 		$inputFieldsHtml = $this->printFormInputs($accountId);
-		$formId = 'form_pangalink_'.substr(md5(mt_rand(1, 9999999)), 0, 10);
+		$formId = 'form_pangalink_'.substr(md5($inputFieldsHtml), 0, 15);
 		
 		$html = <<<HTML
 <form method="post" action="%ACTION%" id="%FORM_ID%">
