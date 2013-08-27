@@ -16,6 +16,8 @@ class BankResponse
 	 */
 	protected $data;
 	
+	protected $charset = 'utf-8';
+	
 	public function __construct(Request $request)
 	{
 		$parameters = array();
@@ -51,7 +53,8 @@ class BankResponse
 	
 	public function getSenderName()
 	{
-		return $this->getParameter('VK_SND_NAME');
+		return iconv($this->charset, 'utf-8', $this->getParameter('VK_SND_NAME'));
+		
 	}
 	
 	public function getSenderAccountNumber()
@@ -74,12 +77,22 @@ class BankResponse
 		return $this->getParameter('VK_REF');
 	}
 	
+	public function getDescription()
+	{
+		return iconv($this->charset, 'utf-8', $this->getParameter('VK_MSG'));
+	}
+	
 	public function getOrderDate()
 	{
 		$date = \DateTime::createFromFormat('d.m.Y H:i:s', $this->getParameter('VK_T_TIME'));
 		if(!($date instanceof \DateTime))
 			$date = null;
 		return $date;
+	}
+	
+	public function setCharset($charset)
+	{
+		$this->charset = $charset;
 	}
 
 }

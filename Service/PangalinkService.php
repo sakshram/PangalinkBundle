@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use TFox\PangalinkBundle\Response\BankResponse;
 use TFox\PangalinkBundle\Connector\SwedbankConnector;
 use TFox\PangalinkBundle\Connector\SebbankConnector;
+use TFox\PangalinkBundle\Connector\SampobankConnector;
 
 class PangalinkService 
 {
@@ -67,6 +68,9 @@ class PangalinkService
 					break;
 				case 'seb':
 					$connector = new SebbankConnector($this, $accountId, $accountData);
+					break;
+				case 'sampo':
+					$connector = new SampobankConnector($this, $accountId, $accountData);
 					break;
 				default:
 					throw new \Exception(sprintf('PangalinkBundle configuration: unknown bank type "%s" for account "%s"', $bankType, $accountId));
