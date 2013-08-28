@@ -5,7 +5,7 @@ namespace TFox\PangalinkBundle\Connector;
  * Connector for SEB
  *
  */
-class SebbankConnector extends AbstractConnector 
+class SebConnector extends AbstractConnector 
 {
 
 	public function __construct($pangalinkService, $accountId, $configuration)

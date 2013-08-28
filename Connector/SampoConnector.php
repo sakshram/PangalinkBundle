@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Connector for Sampo Bank (Danske)
  *
  */
-class SampobankConnector extends AbstractConnector 
+class SampoConnector extends AbstractConnector 
 {
 
 	public function __construct($pangalinkService, $accountId, $configuration)
