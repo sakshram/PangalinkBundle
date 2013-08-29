@@ -25,7 +25,17 @@ class PangalinkExtension extends \Twig_Extension
 	public function  __construct(\TFox\PangalinkBundle\Service\PangalinkService $service)
 	{
 		$this->service = $service;
-		$this->assetsHelper = $this->service->getContainer()->get('templating.helper.assets');
+		
+		/*
+		 * Catch block
+		 * Purpose: Avoid an InactiveScopeException when calling Symfony console
+		 */
+		try {
+			$this->assetsHelper = $this->service->getContainer()->get('templating.helper.assets');
+		} catch(\Exception $e) {
+			
+		}
+		
 	}
 	
 	public function getFunctions()
