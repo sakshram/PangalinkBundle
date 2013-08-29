@@ -140,14 +140,14 @@ class SomeController extends BaseController
 //YourBundle/Resources/views/Some/index.html.twig
 
 {# 'swedbank' is bank ID which was defined in config.yml  #}
-<form method="post" action="{{ pangalink_action_url('swedbank') }}">
+&lt;form method="post" action="{{ pangalink_action_url('swedbank') }}"&gt;
 {{ pangalink_form_data('swedbank') }}
 
 {# Just an argument from controller  #}
 Summ: {{ amount }}<br />
 
-<input type="submit" value="Begin payment">
-</form>
+&lt;input type="submit" value="Begin payment"&gt;
+&lt;/form&gt;
 
 </code></pre>
 
