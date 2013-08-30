@@ -185,7 +185,7 @@ class SomeController extends BaseController
 	 * @Sensio\Route("/process")
 	 * @Sensio\Template
 	 */
-	public function processAction()
+	public function processAction(Request $request)
   {
 		/* @var $service \TFox\PangalinkBundle\Service\PangalinkService */
 		$service = $this->get('tfox.pangalink.service');
