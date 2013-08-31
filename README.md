@@ -1,12 +1,10 @@
 PangalinkBundle
 ===============
 
-Adds a functionality for making payments in Estonia using Banklink (Pangalink) transfer.
-
-At this moment only payment logic is implemented.
+Adds a functionality for making payments in Estonia using Banklink (Pangalink) transfer.<br>
+At this moment only payment logic is implemented.<br>
 
 Banks available:
-
 * Swedbank
 * SEB
 * Krediidipank
@@ -157,7 +155,7 @@ Summ: {{ amount }}<br />
 
 //YourBundle/Resources/views/Some/index.html.twig
 
-{# The first argument is bank ID. The second argument is a button code. All codes will be published a bit later.  #}
+{# The first argument is bank ID. The second argument is a button code. Watch the table below.  #}
 
 {{ pangalink_button('swedbank', '88x31') }}
 
@@ -170,6 +168,27 @@ Summ: {{ amount }}<br />
 {{ pangalink_button('swedbank', '217x31_eng') }}
 
 </code></pre>
+
+In the table below are provided codes for images which are available in PangalinkBundle.<br>
+<b>WARNING! </b> All images are the property of their respective owners (banks). It is usually forbidden to modify provided images.
+
+| Bank                   | Available image codes         |
+|-----------------------:|:-----------------------------:|
+| Swedbank               | 88x31                         |
+|                        | 120x60                        |
+|                        | 217x31_est                    |
+|                        | 217x31_rus                    |
+|                        | 217x31_eng                    |
+| SEB                    | 88x31                         |
+|                        | 120x60                        |
+| Krediidipank           | 88x19                         |
+|                        | 88x31                         |
+|                        | 137x30                        |
+| Sampobank              | 88x31                         |
+|                        | 88x31_anim                    |
+|                        | 120x60                        |
+|                        | 180x70                        |
+
 
 * The last task is to process a response which was sent by bank. Let's look to controller again:
 
