@@ -95,6 +95,20 @@ class AbstractConnector
 	public function processPayment(Request $request)
 	{
 		$response = new BankResponse($request);
+		$this->checkSignature($response);		
+		$this->bankResponse = $response;
+	}
+	
+	/**
+	 * Checks a digital signature from bank response
+	 * @param unknown $bankResponse
+	 * @throws \Exception
+	 * @throws CertificateNotFoundException
+	 * @throws BadSignatureException
+	 */
+	public function checkSignature($response)
+	{
+		$this->bankResponse = $response;
 		
 		if(!key_exists('bank_certificate', $this->configuration))
 			throw new \Exception('Pangalink Bundle: missing mandatory parameter "bank_Certificate"');
@@ -102,15 +116,13 @@ class AbstractConnector
 		$certificatePath = $this->pangalinkService->getKernelRootPath().'/'.$this->configuration['bank_certificate'];
 		if(!file_exists($certificatePath))
 			throw new CertificateNotFoundException($certificatePath);
-
+		
 		$certificate = file_get_contents($certificatePath);
-		$key = openssl_pkey_get_public($certificate);			
+		$key = openssl_pkey_get_public($certificate);
 		
 		if (!openssl_verify($this->generateMacString($response->getData()), base64_decode($response->getMac()), $key)) {
 			throw new BadSignatureException($this->accountId);
 		}
-		
-		$this->bankResponse = $response;
 	}
 	
 	public function setDescription($value)

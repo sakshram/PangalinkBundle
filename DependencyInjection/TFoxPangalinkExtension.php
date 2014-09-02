@@ -14,9 +14,8 @@ use Symfony\Component\DependencyInjection\Loader;
  */
 class TFoxPangalinkExtension extends Extension
 {
-	const PREFIX_CONTAINER_ACCOUNTS = 'tfox.pangalink.accounts.';
-	
-	//const DEFAULT_CHARSET = 'utf-8';
+	const PREFIX_CONTAINER_ACCOUNTS = 'tfox.pangalink.accounts';
+	const PREFIX_CONTAINER_ACCOUNT_IDS = 'tfox.pangalink.account_ids';
 	
     /**
      * {@inheritDoc}
@@ -27,9 +26,10 @@ class TFoxPangalinkExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $accounts = key_exists('accounts', $config) ? $config['accounts'] : array();
+        $accountIds = array();
         foreach($accounts as $accountId => $account) {
         	$parameters = array();
-        	$containerKey = self::PREFIX_CONTAINER_ACCOUNTS.$accountId;        	
+        	$containerKey = self::PREFIX_CONTAINER_ACCOUNTS.'.'.$accountId;        	
         	
         	//Iterate through all mandatory parameters
         	$mandatoryParameters = array('account_number', 'account_owner', 'private_key', 'bank_certificate', 'vendor_id');
@@ -46,8 +46,10 @@ class TFoxPangalinkExtension extends Extension
         	}
 
         	$container->setParameter($containerKey, $parameters);
+        	$accountIds[] = $accountId;
         }
-        
+        $container->setParameter(self::PREFIX_CONTAINER_ACCOUNT_IDS, $accountIds);
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
     }

@@ -210,6 +210,8 @@ class SomeController extends BaseController
 		$service = $this->get('tfox.pangalink.service');
 		/* @var $connector \TFox\PangalinkBundle\Connector\SwedbankConnector */
 		$connector = $service->getConnector('swedbank');
+		//...or detect appropriate connector automatically
+		// $connector = $service->getConnectorByRequest($request);
 		$connector->processPayment($request);
 		
 		$data = $connector->getResponse()->getData();

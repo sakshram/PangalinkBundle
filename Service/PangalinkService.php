@@ -10,6 +10,8 @@ use TFox\PangalinkBundle\Connector\SwedbankConnector;
 use TFox\PangalinkBundle\Connector\SebConnector;
 use TFox\PangalinkBundle\Connector\SampoConnector;
 use TFox\PangalinkBundle\Connector\KrediidipankConnector;
+use Symfony\Component\HttpFoundation\Response;
+use TFox\PangalinkBundle\Exception\BadSignatureException;
 
 class PangalinkService 
 {
@@ -36,6 +38,10 @@ class PangalinkService
 	 */
 	private $router;
 	
+	public static $ID_BANK_SWED = 'HP';
+	public static $ID_BANK_SEB = 'EYP';
+	public static $ID_BANK_SAMPO = 'SAMPOPANK';
+	public static $ID_BANK_KREDIIDIBANK = 'KREP';	
 	
 	public function __construct(Container $container)
 	{
@@ -95,12 +101,51 @@ class PangalinkService
 		//Configuration not found: load it from container parameters
 		$config = array();
 			
-		$containerKey = TFoxPangalinkExtension::PREFIX_CONTAINER_ACCOUNTS.$accountId;
+		$containerKey = TFoxPangalinkExtension::PREFIX_CONTAINER_ACCOUNTS.'.'.$accountId;
 		if(!$this->container->hasParameter($containerKey))
 			throw new AccountNotFoundException($accountId);
 			
 		$config = $this->container->getParameter($containerKey);
 		$this->configs[$accountId] = $config;
+	}
+	
+	private function getAllConnectors()
+	{
+		$containerKey = TFoxPangalinkExtension::PREFIX_CONTAINER_ACCOUNT_IDS;
+		if(false == $this->container->hasParameter($containerKey))
+			throw new \Exception('Parameter '.$containerKey.' was not found in container.');	
+		$accountIds = $this->container->getParameter($containerKey);
+		if(!is_array($accountIds))
+			throw new \Exception('Parameter '.$containerKey.' is not an array');
+		
+		$connectors = array();
+		foreach($accountIds as $accountId) {
+			$account = $this->getConnector($accountId);
+			if(false == is_null($account))
+				$connectors[] = $account;
+		}
+		return $connectors;
+	}
+	
+	/**
+	 * Finds a suitable connector by received response
+	 */
+	public function getConnectorByRequest(Request $request)
+	{
+		$connectors = $this->getAllConnectors();
+		foreach($connectors as $connector) {						
+			try {
+				/* @var $connector \TFox\PangalinkBundle\Connector\AbstractConnector */
+				$bankResponse = new BankResponse($request);
+				$connector->checkSignature($bankResponse);
+				
+				return $connector;
+			} catch(BadSignatureException $e) {
+				//Пропускаем банк. если подпись неверна
+			}					
+		}
+		return null;
+		
 	}
 	
 	public function getKernelRootPath()
