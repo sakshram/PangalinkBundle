@@ -2,6 +2,7 @@
 namespace TFox\PangalinkBundle\Connector\IPizza;
 
 use TFox\PangalinkBundle\Connector\IPizza\AbstractIPizzaConnector;
+use TFox\PangalinkBundle\Exception\UnsupportedServiceIdException;
 
 /**
  * Connector for Krediidipank

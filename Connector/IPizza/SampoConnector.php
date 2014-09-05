@@ -2,6 +2,7 @@
 namespace TFox\PangalinkBundle\Connector\IPizza;
 
 use Symfony\Component\HttpFoundation\Request;
+use TFox\PangalinkBundle\Exception\UnsupportedServiceIdException;
 use TFox\PangalinkBundle\Connector\IPizza\AbstractIPizzaConnector;
 
 /**

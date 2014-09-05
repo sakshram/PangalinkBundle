@@ -6,6 +6,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
+use TFox\PangalinkBundle\Exception\MissingMandatoryParameterException;
 
 /**
  * This is the class that loads and manages your bundle configuration
@@ -32,13 +33,14 @@ class TFoxPangalinkExtension extends Extension
         	$containerKey = self::PREFIX_CONTAINER_ACCOUNTS.'.'.$accountId;        	
         	
         	//Iterate through all mandatory parameters
-        	$mandatoryParameters = array('account_number', 'account_owner', 'private_key', 'bank_certificate', 'vendor_id');
+        	$mandatoryParameters = array('vendor_id');
         	foreach($mandatoryParameters as $parameter) {
         		$value = key_exists($parameter, $account) ? $account[$parameter] : null;
         		if(is_null($value))
         			throw new MissingMandatoryParameterException($parameter);
         		$parameters[$parameter] = $value;
         	}
+
         	//Set optional parameters
         	$optionalParameters = array_diff(array_keys($account), $mandatoryParameters);
             foreach($optionalParameters as $parameter) {

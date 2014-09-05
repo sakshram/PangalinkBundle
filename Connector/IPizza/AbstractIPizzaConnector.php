@@ -18,26 +18,7 @@ abstract class AbstractIPizzaConnector  extends AbstractConnector
 	
 	public function __construct($pangalinkService, $accountId, $configuration)
 	{
-		$this->accountId = $accountId;
-		$this->pangalinkService = $pangalinkService;
-		if(is_array($this->configuration))
-			$this->configuration = array_merge($this->configuration, $configuration);			
-		else
-			$this->configuration = $configuration;
-		
-		/*
-		 * Handle return URL and cancel URL parameters
-		 */
-		if(key_exists('route_return', $this->configuration)) {
-			$this->configuration['url_return'] = $this->pangalinkService->getRouter()->generate($this->configuration['route_return'], array(), true);
-		}
-		if(key_exists('route_cancel', $this->configuration)) {
-			$this->configuration['url_cancel'] = $this->pangalinkService->getRouter()->generate($this->configuration['route_cancel'], array(), true);
-		}
-		if(!(key_exists('url_return', $this->configuration)))
-			throw new MissingMandatoryParameterException('url_return');
-		if(!key_exists('url_cancel', $this->configuration))
-			throw new MissingMandatoryParameterException('url_cancel');		
+		parent::__construct($pangalinkService, $accountId, $configuration);
 		
 		$this->macKeys = array(
 			1001 => array(
@@ -52,16 +33,6 @@ abstract class AbstractIPizzaConnector  extends AbstractConnector
 			
 			1901 => array('VK_SERVICE', 'VK_VERSION', 'VK_SND_ID', 'VK_REC_ID', 'VK_STAMP', 'VK_REF', 'VK_MSG')
 		);
-	}
-	
-	/**
-	 * Processes payment information when "Return to vendor" button is clicked
-	 */
-	public function processPayment(Request $request)
-	{
-		$response = new BankResponse($request);
-		$this->checkSignature($response);		
-		$this->bankResponse = $response;
 	}
 	
 	/**
@@ -90,24 +61,6 @@ abstract class AbstractIPizzaConnector  extends AbstractConnector
 		}
 	}
 	
-	public function setDescription($value)
-	{
-		$this->setCustomParameter('description', $value);
-		return $this;
-	}
-	
-	public function setAmount($value)
-	{
-		$this->setCustomParameter('amount', $value);
-		return $this;
-	}
-	
-	public function setTransactionId($value)
-	{
-		$this->setCustomParameter('transaction_id', $value);
-		return $this;
-	}
-	
 	public function setLanguage($value)
 	{
 		$this->setCustomParameter('VK_LANG', $value);
@@ -130,22 +83,6 @@ abstract class AbstractIPizzaConnector  extends AbstractConnector
 	{
 		$this->setCustomParameter('VK_REF', $value);
 		return $this;
-	}
-	
-	public function setCustomParameter($key, $value)
-	{
-		$this->setOptionValue($key, $value);
-		return $this;
-	}
-	
-	public function getConfiguration()
-	{
-		return $this->configuration;
-	}
-	
-	private function setOptionValue($key, $value)
-	{
-		$this->configuration[$key] = $value;
 	}
 	
 	/**
@@ -179,6 +116,7 @@ abstract class AbstractIPizzaConnector  extends AbstractConnector
 		$privateKeyPath = $this->pangalinkService->getKernelRootPath().'/'.$accountData['private_key'];
 		$privateKey = file_get_contents($privateKeyPath);
 		$key = openssl_pkey_get_private($privateKey, $password);
+		$signature = ''; // Initialize string
 		$macString = $this->pangalinkService->getConnector($this->accountId)->generateMacString($formData);
 		if (!openssl_sign ($macString, $signature, $key, OPENSSL_ALGO_SHA1)) {
 			throw new CannotGenerateSignatureException();
@@ -215,15 +153,6 @@ abstract class AbstractIPizzaConnector  extends AbstractConnector
 	}
 	
 	/**
-	 * Returns response data from bank
-	 * @return \TFox\PangalinkBundle\Response\BankResponse
-	 */
-	public function getResponse()
-	{
-		return $this->bankResponse;
-	}
-	
-	/**
 	 * Returns true if payment was successfull
 	 * Otherwise (if payment was cancelled or some error occured) returns false
 	 * @return boolean
@@ -231,16 +160,5 @@ abstract class AbstractIPizzaConnector  extends AbstractConnector
 	public function isPaymentSuccessful()
 	{
 		return ((!is_null($this->bankResponse)) && ($this->bankResponse->getParameter('VK_SERVICE') == '1101'));
-	}
-	
-	/**
-	 * Returns an address of image from assets
-	 * This address is not absolute and must be handled with assets helper
-	 * @param string $imageId
-	 * @return string
-	 */
-	public function getButtonImage($imageId)
-	{
-		return key_exists($imageId, $this->buttonImages) ? $this->buttonImages[$imageId] : '';
 	}
 }

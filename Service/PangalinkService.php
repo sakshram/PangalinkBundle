@@ -4,6 +4,7 @@ namespace TFox\PangalinkBundle\Service;
 use Symfony\Component\DependencyInjection\Container;
 use TFox\PangalinkBundle\DependencyInjection\TFoxPangalinkExtension;
 use TFox\PangalinkBundle\Exception\AccountNotFoundException;
+use TFox\PangalinkBundle\Exception\UnsupportedServiceIdException;
 use Symfony\Component\HttpFoundation\Request;
 use TFox\PangalinkBundle\Response\BankResponse;
 use TFox\PangalinkBundle\Connector\IPizza\SwedbankConnector;
@@ -12,6 +13,7 @@ use TFox\PangalinkBundle\Connector\IPizza\SampoConnector;
 use TFox\PangalinkBundle\Connector\IPizza\KrediidipankConnector;
 use Symfony\Component\HttpFoundation\Response;
 use TFox\PangalinkBundle\Exception\BadSignatureException;
+use TFox\PangalinkBundle\Connector\Solo\NordeaConnector;
 
 class PangalinkService 
 {
@@ -38,10 +40,11 @@ class PangalinkService
 	 */
 	private $router;
 	
-	public static $ID_BANK_SWED = 'HP';
-	public static $ID_BANK_SEB = 'EYP';
-	public static $ID_BANK_SAMPO = 'SAMPOPANK';
-	public static $ID_BANK_KREDIIDIBANK = 'KREP';	
+	const ID_BANK_SWED = 'HP';
+	const ID_BANK_SEB = 'EYP';
+	const ID_BANK_SAMPO = 'SAMPOPANK';
+	const ID_BANK_KREDIIDIBANK = 'KREP';
+	const ID_BANK_NORDEA = 'NORDEA';
 	
 	public function __construct(Container $container)
 	{
@@ -81,6 +84,8 @@ class PangalinkService
 					break;
 				case 'krediidipank':
 					$connector = new KrediidipankConnector($this, $accountId, $accountData);
+				case 'nordea':
+					$connector = new NordeaConnector($this, $accountId, $accountData);
 					break;
 				default:
 					throw new \Exception(sprintf('PangalinkBundle configuration: unknown bank type "%s" for account "%s"', $bankType, $accountId));
@@ -142,7 +147,9 @@ class PangalinkService
 				return $connector;
 			} catch(BadSignatureException $e) {
 				//Пропускаем банк. если подпись неверна
-			}					
+			} catch(UnsupportedServiceIdException $e2) {
+				//Пропускаем банк. если сервис не поддерживается
+			}	
 		}
 		return null;
 		
