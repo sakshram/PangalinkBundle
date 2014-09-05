@@ -1,5 +1,5 @@
 <?php
-namespace TFox\PangalinkBundle\Connector;
+namespace TFox\PangalinkBundle\Connector\IPizza;
 
 use Symfony\Component\HttpFoundation\Request;
 use TFox\PangalinkBundle\Response\BankResponse;
@@ -8,48 +8,13 @@ use TFox\PangalinkBundle\Exception\BadSignatureException;
 use TFox\PangalinkBundle\Exception\UnsupportedServiceIdException;
 use TFox\PangalinkBundle\Exception\CannotGenerateSignatureException;
 use TFox\PangalinkBundle\Exception\MissingMandatoryParameterException;
+use TFox\PangalinkBundle\Connector\AbstractConnector;
+
 /**
- * Common bank connection routine
- *
+ * Common methods for IPizza protocol
  */
-abstract class AbstractConnector 
+abstract class AbstractIPizzaConnector  extends AbstractConnector
 {
-	/**
-	 * @var string
-	 */
-	protected $accountId;
-	
-	/**
-	 * Configuration parameters array.
-	 * @var array
-	 */
-	protected $configuration;
-	
-	/**
-	 * 
-	 * @var \TFox\PangalinkBundle\Service\PangalinkService
-	 */
-	protected $pangalinkService;
-	
-	/**
-	 * An array with kays for generation of MAC
-	 * @var array
-	 */
-	protected $macKeys;
-	
-	/**
-	 * An array where keys are image IDs and values are relative paths to images
-	 * @var array
-	 */
-	protected $buttonImages;
-	
-	/**
-	 * 
-	 * @var \TFox\PangalinkBundle\Response\BankResponse
-	 */
-	protected $bankResponse = null;
-	
-	protected $assetImagesPrefix = 'bundles/tfoxpangalink/img/';
 	
 	public function __construct($pangalinkService, $accountId, $configuration)
 	{
@@ -215,7 +180,6 @@ abstract class AbstractConnector
 		$privateKey = file_get_contents($privateKeyPath);
 		$key = openssl_pkey_get_private($privateKey, $password);
 		$macString = $this->pangalinkService->getConnector($this->accountId)->generateMacString($formData);
-		$signature = ''; // declare sting
 		if (!openssl_sign ($macString, $signature, $key, OPENSSL_ALGO_SHA1)) {
 			throw new CannotGenerateSignatureException();
 		}

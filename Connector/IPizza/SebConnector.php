@@ -1,11 +1,13 @@
 <?php
-namespace TFox\PangalinkBundle\Connector;
+namespace TFox\PangalinkBundle\Connector\IPizza;
+
+use TFox\PangalinkBundle\Connector\IPizza\AbstractIPizzaConnector;
 
 /**
  * Connector for SEB
  *
  */
-class SebConnector extends AbstractConnector 
+class SebConnector extends AbstractIPizzaConnector
 {
 
 	public function __construct($pangalinkService, $accountId, $configuration)

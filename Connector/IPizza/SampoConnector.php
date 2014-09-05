@@ -1,12 +1,14 @@
 <?php
-namespace TFox\PangalinkBundle\Connector;
+namespace TFox\PangalinkBundle\Connector\IPizza;
 
 use Symfony\Component\HttpFoundation\Request;
+use TFox\PangalinkBundle\Connector\IPizza\AbstractIPizzaConnector;
+
 /**
  * Connector for Sampo Bank (Danske)
  *
  */
-class SampoConnector extends AbstractConnector 
+class SampoConnector extends AbstractIPizzaConnector
 {
 
 	public function __construct($pangalinkService, $accountId, $configuration)

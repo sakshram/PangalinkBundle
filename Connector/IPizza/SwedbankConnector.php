@@ -1,11 +1,13 @@
 <?php
-namespace TFox\PangalinkBundle\Connector;
+namespace TFox\PangalinkBundle\Connector\IPizza;
+
+use TFox\PangalinkBundle\Connector\IPizza\AbstractIPizzaConnector;
 
 /**
  * Connector for Swedbank
  *
  */
-class SwedbankConnector extends AbstractConnector 
+class SwedbankConnector extends AbstractIPizzaConnector
 {
 
 	public function __construct($pangalinkService, $accountId, $configuration)

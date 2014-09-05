@@ -6,10 +6,10 @@ use TFox\PangalinkBundle\DependencyInjection\TFoxPangalinkExtension;
 use TFox\PangalinkBundle\Exception\AccountNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
 use TFox\PangalinkBundle\Response\BankResponse;
-use TFox\PangalinkBundle\Connector\SwedbankConnector;
-use TFox\PangalinkBundle\Connector\SebConnector;
-use TFox\PangalinkBundle\Connector\SampoConnector;
-use TFox\PangalinkBundle\Connector\KrediidipankConnector;
+use TFox\PangalinkBundle\Connector\IPizza\SwedbankConnector;
+use TFox\PangalinkBundle\Connector\IPizza\SebConnector;
+use TFox\PangalinkBundle\Connector\IPizza\SampoConnector;
+use TFox\PangalinkBundle\Connector\IPizza\KrediidipankConnector;
 use Symfony\Component\HttpFoundation\Response;
 use TFox\PangalinkBundle\Exception\BadSignatureException;
 
