@@ -176,4 +176,11 @@ abstract class AbstractConnector
 	{
 		return key_exists($imageId, $this->buttonImages) ? $this->buttonImages[$imageId] : '';
 	}
+	
+	/**
+	 * Parse request and make an object of class BankResponse
+	 */
+	public abstract function createBankResponse(Request $request);
+	
+	public abstract function getBankName();
 }

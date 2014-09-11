@@ -3,6 +3,7 @@ namespace TFox\PangalinkBundle\Connector\IPizza;
 
 use TFox\PangalinkBundle\Connector\IPizza\AbstractIPizzaConnector;
 use TFox\PangalinkBundle\Exception\UnsupportedServiceIdException;
+use TFox\PangalinkBundle\TFoxPangalinkBundle;
 
 /**
  * Connector for Swedbank
@@ -65,5 +66,10 @@ class SwedbankConnector extends AbstractIPizzaConnector
 		}
 	
 		return $data;
+	}
+	
+	public function getBankName()
+	{
+		return TFoxPangalinkBundle::BANK_SWEDBANK;
 	}
 }

@@ -3,6 +3,7 @@ namespace TFox\PangalinkBundle\Connector\IPizza;
 
 use TFox\PangalinkBundle\Connector\IPizza\AbstractIPizzaConnector;
 use TFox\PangalinkBundle\Exception\UnsupportedServiceIdException;
+use TFox\PangalinkBundle\TFoxPangalinkBundle;
 
 /**
  * Connector for Krediidipank
@@ -56,5 +57,10 @@ class KrediidipankConnector extends AbstractIPizzaConnector
 		unset($formData['VK_ACC']);
 		unset($formData['VK_NAME']);
 		return $formData;
+	}
+	
+	public function getBankName()
+	{
+		return TFoxPangalinkBundle::BANK_KREDIIDIPANK;
 	}
 }

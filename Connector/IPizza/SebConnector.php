@@ -3,6 +3,7 @@ namespace TFox\PangalinkBundle\Connector\IPizza;
 
 use TFox\PangalinkBundle\Connector\IPizza\AbstractIPizzaConnector;
 use TFox\PangalinkBundle\Exception\UnsupportedServiceIdException;
+use TFox\PangalinkBundle\TFoxPangalinkBundle;
 
 /**
  * Connector for SEB
@@ -37,5 +38,10 @@ class SebConnector extends AbstractIPizzaConnector
 		$formData['VK_CHARSET'] = $accountData['charset'];
 	
 		return $formData;
+	}
+	
+	public function getBankName()
+	{
+		return TFoxPangalinkBundle::BANK_SEB;
 	}
 }

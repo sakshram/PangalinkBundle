@@ -33,6 +33,10 @@ abstract class AbstractSoloConnector  extends AbstractConnector
 				'SOLOPMT_RETURN_REF', 'SOLOPMT_RETURN_PAID' 
 			)
 		);
+		
+		if(key_exists('route_reject', $this->configuration)) {
+			$this->configuration['url_reject'] = $this->pangalinkService->getRouter()->generate($this->configuration['route_reject'], array(), true);
+		}
 	}
 	
 	/**
@@ -47,32 +51,11 @@ abstract class AbstractSoloConnector  extends AbstractConnector
 		$this->bankResponse = $response;
 		$responseData = $response->getData();
 		
-		$receivedMac = $responseData["SOLOPMT_RETURN_MAC"];
+		$receivedMac = $response->getMac();
 		$generatedMac = $this->generateMacString($responseData);
 		
 		if($receivedMac != $generatedMac)
 			throw new BadSignatureException($this->accountId);
-	}
-	
-	public function setLanguage($value)
-	{
-		/* From Norder documentation:
-		 *  3 = English
-		 *	4 = Estonian
-		 *	6 = Latvian
-		 *	7 = Lithuanian 
-		 */
-		$languageCodes = array(
-			'en' => 3,
-			'ee' => 4,
-			'lv' => 6,
-			'lt' => 7 
-		); 
-		$code = key_exists($value, $languageCodes) ? $languageCodes[$value] : $languageCodes['en'];
-		
-		
-		$this->setCustomParameter('SOLOPMT_LANGUAGE', $code);
-		return $this;
 	}
 	
 	public function setReturnUrl($value)
@@ -99,6 +82,12 @@ abstract class AbstractSoloConnector  extends AbstractConnector
 		return $this;
 	}
 	
+	public function setSecret($secret)
+	{
+		$this->setCustomParameter('secret', $secret);
+		return $this;	
+	}
+	
 	/**
 	 * Generates an array with form data to paste it into the form
 	 * @throws CannotGenerateSignatureException
@@ -107,7 +96,6 @@ abstract class AbstractSoloConnector  extends AbstractConnector
 	public function generateFormData()
 	{		
 		$accountData = $this->getConfiguration();
-		
 		$formData = array(
 			'SOLOPMT_VERSION' => '0003',
 			'SOLOPMT_RCV_ID' => $accountData['vendor_id'],
@@ -133,7 +121,8 @@ abstract class AbstractSoloConnector  extends AbstractConnector
 		$macKeys = $this->macKeys['PAYMENT_REQUEST'];
 		$hash = array();
 		foreach($macKeys as $macKey) {
-			$hash[] = $formData[$macKey];
+			if(strlen($formData[$macKey]) > 0)
+				$hash[] = $formData[$macKey];
 		}
 		$hash[] = $secret;
 		$hash = implode('&', $hash).'&';
@@ -158,7 +147,8 @@ abstract class AbstractSoloConnector  extends AbstractConnector
 		$macFields = $this->macKeys['PAYMENT_RESPONSE'];
 		$digitParameters = array();
 		foreach($macFields as $macField) {
-			$digitParameters[] = $input[$macField];
+			if(key_exists($macField, $input))
+				$digitParameters[] = $input[$macField];
 		}
 		$digitParameters[] = $secret;
 		$mac = implode('&', $digitParameters).'&';
@@ -175,6 +165,31 @@ abstract class AbstractSoloConnector  extends AbstractConnector
 	public function isPaymentSuccessful()
 	{
 		return ((!is_null($this->bankResponse)) && 
-			!empty($this->bankResponse->getParameter('SOLO_RETURN_PAID')));
+			!empty($this->bankResponse->getBankTransactionId()));
+	}
+	
+	public function createBankResponse(Request $request)
+	{
+		$bankResponse = new BankResponse();
+		$bankResponse->setData($request->query->all());
+		$requestIterator = $request->query->getIterator();
+		/* @var $requestIterator \ArrayIterator */
+		while($requestIterator->valid()) {
+			$value = $requestIterator->current();
+			switch($requestIterator->key()) {
+				case 'SOLOPMT_RETURN_STAMP':
+					$bankResponse->setVendorTransactionId($value);
+					break;
+				case 'SOLOPMT_RETURN_PAID':
+					$bankResponse->setBankTransactionId($value);
+					break;
+				case 'SOLOPMT_RETURN_MAC':
+					$bankResponse->setMac($value);
+					break;
+			}
+			$requestIterator->next();
+		}
+	
+		return $bankResponse;
 	}
 }

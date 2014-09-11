@@ -161,4 +161,56 @@ abstract class AbstractIPizzaConnector  extends AbstractConnector
 	{
 		return ((!is_null($this->bankResponse)) && ($this->bankResponse->getParameter('VK_SERVICE') == '1101'));
 	}
+	
+	public function createBankResponse(Request $request)
+	{
+		$bankResponse = new BankResponse();
+		$bankResponse->setData($request->request->all());
+		
+		$requestIterator = $request->request->getIterator();
+		/* @var $requestIterator \ArrayIterator */
+		while($requestIterator->valid()) {
+			$value = $requestIterator->current();
+			switch($requestIterator->key()) {
+				case 'VK_MAC':
+					$bankResponse->setMac($value);
+					break;
+				case 'VK_T_NO':
+					$bankResponse->setVendorTransactionId($value)
+						->setBankTransactionId($value);
+					break;
+				case 'VK_SND_NAME':
+					$bankResponse->setSenderName($value);
+					break;
+				case 'VK_SND_ACC':
+					$bankResponse->setSenderAccountNumber($value);
+					break;
+				case 'VK_AMOUNT':
+					$bankResponse->setAmount($value);
+					break;
+				case 'VK_CURR':
+					$bankResponse->setCurrency($value);
+					break;			
+				case 'VK_REF':
+					$bankResponse->setReferenceNumber($value);
+					break;
+				case 'VK_MSG':
+					$bankResponse->setDescription(
+						iconv($bankResponse->getCharset(), 'utf-8', $value));
+					break;
+				case 'VK_CURR':
+					$bankResponse->setCurrency($value);
+					break;		
+				case 'VK_T_TIME':
+					$date = \DateTime::createFromFormat('d.m.Y H:i:s', $value);
+					if(!($date instanceof \DateTime))
+						$date = null;
+					$bankResponse->setOrderDate($date);
+					break;
+			}
+			$requestIterator->next();
+		}
+		
+		return $bankResponse;
+	}
 }

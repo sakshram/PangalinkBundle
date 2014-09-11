@@ -9,6 +9,7 @@ Banks available:
 * SEB
 * Krediidipank
 * Danske
+* Nordea
 
 
 
@@ -19,7 +20,7 @@ Installation
 <pre><code>
 "require": {
   ...
-  "tfox/pangalink-bundle": "1.0.*@dev"
+  "tfox/pangalink-bundle": "1.2.*@dev"
   ...
 </code></pre>
 * Run "php composer.phar update"
@@ -67,7 +68,7 @@ t_fox_pangalink:
         seb:
             bank: seb
             account_number: 1234567
-            account_owner: "Test"
+            account_owner: "Test2"
             private_key: "data/pangalink/seb_user_key.pem"
             bank_certificate: "data/pangalink/seb_bank_cert.pem"
             vendor_id: "33333333"
@@ -77,12 +78,21 @@ t_fox_pangalink:
         seb_second:
             bank: seb
             account_number: 9876545
-            account_owner: "Test2"
+            account_owner: "Test3"
             private_key: "data/pangalink/seb_user_key2.pem"
             bank_certificate: "data/pangalink/seb_bank_cert2.pem"
             vendor_id: "33333334"
             route_return: "acme_demo_pangalink_sebbanksecond_process"
             route_cancel: "acme_demo_pangalink_sebbanksecond_index"
+        #Nordea uses secret instead of key pair based encryption.
+        nordea:
+            bank: nordea
+            account_owner: "Test4"
+            secret: "SomeSecretString"
+            vendor_id: "33333334"
+            route_return: "acme_demo_pangalink_nordea_process"
+            route_reject: "acme_demo_pangalink_nordea_index"
+            route_cancel: "acme_demo_pangalink_nordea_index"
 </code></pre>
 
 Usage
@@ -188,6 +198,8 @@ In the table below are provided codes for images which are available in Pangalin
 |                        | 88x31_anim                    |
 |                        | 120x60                        |
 |                        | 180x70                        |
+| Nordea                 | 88x31                         |
+|                        | 177x56                        |
 
 
 * The last task is to process a response which was sent by bank. Let's look to controller again:

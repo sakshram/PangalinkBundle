@@ -141,7 +141,7 @@ class PangalinkService
 		foreach($connectors as $connector) {						
 			try {
 				/* @var $connector \TFox\PangalinkBundle\Connector\AbstractConnector */
-				$bankResponse = new BankResponse($request);
+				$bankResponse = $connector->createBankResponse($request);
 				$connector->checkSignature($bankResponse);
 				
 				return $connector;

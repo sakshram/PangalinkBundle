@@ -4,6 +4,7 @@ namespace TFox\PangalinkBundle\Connector\IPizza;
 use Symfony\Component\HttpFoundation\Request;
 use TFox\PangalinkBundle\Exception\UnsupportedServiceIdException;
 use TFox\PangalinkBundle\Connector\IPizza\AbstractIPizzaConnector;
+use TFox\PangalinkBundle\TFoxPangalinkBundle;
 
 /**
  * Connector for Sampo Bank (Danske)
@@ -39,5 +40,10 @@ class SampoConnector extends AbstractIPizzaConnector
 	{
 		parent::processPayment($request);
 		$this->bankResponse->setCharset('ISO-8859-1');
+	}
+	
+	public function getBankName()
+	{
+		return TFoxPangalinkBundle::BANK_DANSKE;
 	}
 }

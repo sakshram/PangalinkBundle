@@ -10,6 +10,27 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class BankResponse 
 {
+	
+	protected $vendorTransactionId;
+	
+	protected $bankTransactionId;
+	
+	protected $mac;
+	
+	protected $referenceNumber;
+	
+	protected $senderName;
+	
+	protected $senderAccountNumber;
+	
+	protected $amount;
+	
+	protected $currency;
+	
+	protected $orderDate;
+	
+	protected $description;
+	
 	/**
 	 * 
 	 * @var array
@@ -18,81 +39,144 @@ class BankResponse
 	
 	protected $charset = 'utf-8';
 	
-	public function __construct(Request $request)
-	{
-		$parameters = array();
-		$requestIterator = $request->request->getIterator();
-		/* @var $requestIterator \ArrayIterator */
-		while($requestIterator->valid()) {
-			if (substr($requestIterator->key(), 0, 3) == 'VK_')
-				$parameters[$requestIterator->key()] = $requestIterator->current();
-			$requestIterator->next();
-		}
-		$this->data = $parameters;
-	}
-	
-	public function getData()
-	{
-		return $this->data;
-	}
-	
 	public function getParameter($key)
 	{
 		return key_exists($key, $this->data) ? $this->data[$key] : null;
 	}
 	
-	public function getMac()
+
+	
+	public function getMac() 
 	{
-		return $this->getParameter('VK_MAC');
+		return $this->mac;
 	}
 	
-	public function getOrderNumber()
+	public function setMac($mac) 
 	{
-		return $this->getParameter('VK_T_NO');
+		$this->mac = $mac;
+		return $this;
 	}
 	
-	public function getSenderName()
+	public function getReferenceNumber() 
 	{
-		return iconv($this->charset, 'utf-8', $this->getParameter('VK_SND_NAME'));
-		
+		return $this->referenceNumber;
 	}
 	
-	public function getSenderAccountNumber()
+	public function setReferenceNumber($referenceNumber) 
 	{
-		return $this->getParameter('VK_SND_ACC');
+		$this->referenceNumber = $referenceNumber;
+		return $this;
 	}
 	
-	public function getAmount()
+	public function getSenderName() 
 	{
-		return $this->getParameter('VK_AMOUNT');
+		return $this->senderName;
 	}
 	
-	public function getCurrency()
+	public function setSenderName($senderName) 
 	{
-		return $this->getParameter('VK_CURR');
+		$this->senderName = $senderName;
+		return $this;
 	}
 	
-	public function getReferenceNumber()
+	public function getSenderAccountNumber() 
 	{
-		return $this->getParameter('VK_REF');
+		return $this->senderAccountNumber;
 	}
 	
-	public function getDescription()
+	public function setSenderAccountNumber($senderAccountNumber) 
 	{
-		return iconv($this->charset, 'utf-8', $this->getParameter('VK_MSG'));
+		$this->senderAccountNumber = $senderAccountNumber;
+		return $this;
 	}
 	
-	public function getOrderDate()
+	public function getAmount() 
 	{
-		$date = \DateTime::createFromFormat('d.m.Y H:i:s', $this->getParameter('VK_T_TIME'));
-		if(!($date instanceof \DateTime))
-			$date = null;
-		return $date;
+		return $this->amount;
 	}
 	
-	public function setCharset($charset)
+	public function setAmount($amount) 
+	{
+		$this->amount = $amount;
+		return $this;
+	}
+	
+	public function getCurrency() 
+	{
+		return $this->currency;
+	}
+	
+	public function setCurrency($currency) 
+	{
+		$this->currency = $currency;
+		return $this;
+	}
+	
+	public function getOrderDate() 
+	{
+		return $this->orderDate;
+	}
+	
+	public function setOrderDate($orderDate) 
+	{
+		$this->orderDate = $orderDate;
+		return $this;
+	}
+	
+	public function getData() 
+	{
+		return $this->data;
+	}
+	
+	public function setData(array $data) 
+	{
+		$this->data = $data;
+		return $this;
+	}
+	
+	public function getCharset() 
+	{
+		return $this->charset;
+	}
+	
+	public function setCharset($charset) 
 	{
 		$this->charset = $charset;
+		return $this;
 	}
+	
+	public function getDescription() 
+	{
+		return $this->description;
+	}
+	
+	public function setDescription($description) 
+	{
+		$this->description = $description;
+		return $this;
+	}
+	
+	public function getVendorTransactionId() 
+	{
+		return $this->vendorTransactionId;
+	}
+	
+	public function setVendorTransactionId($vendorTransactionId) 
+	{
+		$this->vendorTransactionId = $vendorTransactionId;
+		return $this;
+	}
+	
+	public function getBankTransactionId() 
+	{
+		return $this->bankTransactionId;
+	}
+	
+	public function setBankTransactionId($bankTransactionId) 
+	{
+		$this->bankTransactionId = $bankTransactionId;
+		return $this;
+	}
+	
 
 }
