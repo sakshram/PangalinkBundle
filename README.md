@@ -42,7 +42,7 @@ t_fox_pangalink:
         #First bank
         #ID of the first bank. This ID will be used in system. Feel free to write any ID you wish
         swedbank:
-            #Type of bank. Possible arguments: swedbank, seb, krediidipank, sampo
+            #Type of bank. Possible arguments: swedbank, seb, krediidipank, sampo, nordea
             bank: swedbank
             #Service URL. Remove in production mode if real bank's URL is necessary
             service_url: "https://pangalink.net/banklink/swedbank"
