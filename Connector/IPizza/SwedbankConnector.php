@@ -27,7 +27,8 @@ class SwedbankConnector extends AbstractIPizzaConnector
 		
 		$this->buttonImages = array(
 			'88x31' => $this->assetImagesPrefix.'swed_1.gif',
-			'120x60' => $this->assetImagesPrefix.'swed_2.gif',
+			'120x60_1' => $this->assetImagesPrefix.'swed_2.gif',
+            '120x60_2' => $this->assetImagesPrefix.'swed_6.png',
 			'217x31_est' => $this->assetImagesPrefix.'swed_3.gif',
 			'217x31_rus' => $this->assetImagesPrefix.'swed_4.gif',
 			'217x31_eng' => $this->assetImagesPrefix.'swed_5.gif'

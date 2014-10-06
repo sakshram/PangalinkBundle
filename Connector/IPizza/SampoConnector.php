@@ -29,7 +29,8 @@ class SampoConnector extends AbstractIPizzaConnector
 		$this->buttonImages = array(
 			'88x31' => $this->assetImagesPrefix.'danske_1.gif',
 			'88x31_anim' => $this->assetImagesPrefix.'danske_2.gif',
-			'120x60' => $this->assetImagesPrefix.'danske_3.gif',
+			'120x60_1' => $this->assetImagesPrefix.'danske_3.gif',
+            '120x60_2' => $this->assetImagesPrefix.'danske_5.png',
 			'180x70' => $this->assetImagesPrefix.'danske_4.gif'
 		);
 		

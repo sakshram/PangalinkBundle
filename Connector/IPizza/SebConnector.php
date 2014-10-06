@@ -27,7 +27,8 @@ class SebConnector extends AbstractIPizzaConnector
 		
 		$this->buttonImages = array(
 			'88x31' => $this->assetImagesPrefix.'seb_1.gif',
-			'120x60' => $this->assetImagesPrefix.'seb_2.gif'
+			'120x60_1' => $this->assetImagesPrefix.'seb_2.gif',
+            '120x60_2' => $this->assetImagesPrefix.'seb_3.png'
 		);
 		
 		parent::__construct($pangalinkService, $accountId, $configuration);

@@ -185,18 +185,21 @@ In the table below are provided codes for images which are available in Pangalin
 | Bank                   | Available image codes         |
 |-----------------------:|:-----------------------------:|
 | Swedbank               | 88x31                         |
-|                        | 120x60                        |
+|                        | 120x60_1                      |
+|                        | 120x60_2                      |
 |                        | 217x31_est                    |
 |                        | 217x31_rus                    |
 |                        | 217x31_eng                    |
 | SEB                    | 88x31                         |
-|                        | 120x60                        |
+|                        | 120x60_1                      |
+|                        | 120x60_2                      |
 | Krediidipank           | 88x19                         |
 |                        | 88x31                         |
 |                        | 137x30                        |
 | Sampobank              | 88x31                         |
 |                        | 88x31_anim                    |
-|                        | 120x60                        |
+|                        | 120x60_1                      |
+|                        | 120x60_2                      |
 |                        | 180x70                        |
 | Nordea                 | 88x31                         |
 |                        | 177x56                        |
