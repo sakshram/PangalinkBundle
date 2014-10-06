@@ -26,9 +26,9 @@ class KrediidipankConnector extends AbstractIPizzaConnector
 		);
 		
 		$this->buttonImages = array(
-			'88x19' => $this->assetImagesPrefix.'krediidipank_88x19.jpg',
-			'88x31' => $this->assetImagesPrefix.'krediidipank_88x31.jpg',
-			'137x30' => $this->assetImagesPrefix.'krediidipank_137x30.jpg'
+			'88x19' => $this->assetImagesPrefix.'krediidipank_1.jpg',
+			'88x31' => $this->assetImagesPrefix.'krediidipank_2.jpg',
+			'137x30' => $this->assetImagesPrefix.'krediidipank_3.jpg'
 			
 		);
 		

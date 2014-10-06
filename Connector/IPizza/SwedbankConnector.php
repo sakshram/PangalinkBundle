@@ -26,11 +26,11 @@ class SwedbankConnector extends AbstractIPizzaConnector
 		);
 		
 		$this->buttonImages = array(
-			'88x31' => $this->assetImagesPrefix.'swed_logo_88x31.gif',
-			'120x60' => $this->assetImagesPrefix.'swed_logo_120x60.gif',
-			'217x31_est' => $this->assetImagesPrefix.'swed_logo_217x31_est.gif',
-			'217x31_rus' => $this->assetImagesPrefix.'swed_logo_217x31_rus.gif',
-			'217x31_eng' => $this->assetImagesPrefix.'swed_logo_217x31_eng.gif'
+			'88x31' => $this->assetImagesPrefix.'swed_1.gif',
+			'120x60' => $this->assetImagesPrefix.'swed_2.gif',
+			'217x31_est' => $this->assetImagesPrefix.'swed_3.gif',
+			'217x31_rus' => $this->assetImagesPrefix.'swed_4.gif',
+			'217x31_eng' => $this->assetImagesPrefix.'swed_5.gif'
 		);
 		
 		parent::__construct($pangalinkService, $accountId, $configuration);

@@ -25,8 +25,8 @@ class NordeaConnector extends AbstractSoloConnector
 		);
 		
 		$this->buttonImages = array(
-				'88x31' => $this->assetImagesPrefix.'nordea_88x31.gif',
-				'177x56' => $this->assetImagesPrefix.'nordea_177x56.jpg'
+				'88x31' => $this->assetImagesPrefix.'nordea_1.gif',
+				'177x56' => $this->assetImagesPrefix.'nordea_2.jpg'
 		);
 		
 		parent::__construct($pangalinkService, $accountId, $configuration);

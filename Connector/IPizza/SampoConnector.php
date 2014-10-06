@@ -27,10 +27,10 @@ class SampoConnector extends AbstractIPizzaConnector
 		);		
 		
 		$this->buttonImages = array(
-			'88x31' => $this->assetImagesPrefix.'danske_88x31.gif',
-			'88x31_anim' => $this->assetImagesPrefix.'danske_88x31_anim.gif',
-			'120x60' => $this->assetImagesPrefix.'danske_120x60.gif',
-			'180x70' => $this->assetImagesPrefix.'danske_180x70.gif'
+			'88x31' => $this->assetImagesPrefix.'danske_1.gif',
+			'88x31_anim' => $this->assetImagesPrefix.'danske_2.gif',
+			'120x60' => $this->assetImagesPrefix.'danske_3.gif',
+			'180x70' => $this->assetImagesPrefix.'danske_4.gif'
 		);
 		
 		parent::__construct($pangalinkService, $accountId, $configuration);
