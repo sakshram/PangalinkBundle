@@ -61,43 +61,47 @@ class PangalinkService
 	 */
 	public function getConnector($accountId = 'default')
 	{
+		// Connector was already initialized
 		if(key_exists($accountId, $this->connectors))
 			return $this->connectors[$accountId];
 		
 		$connector = null;
 		$this->initConfig($accountId);
-		if(key_exists($accountId, $this->configs)) {
-			$accountData = $this->configs[$accountId];
-			if(!key_exists('bank', $accountData)) {
-				throw new \Exception(sprintf('PangalinkBundle configuration: missing mandatory parameter "bank" for account "%s"', $accountId));
-			}
-			$bankType = $accountData['bank'];
-			switch($bankType) {
-				case 'swedbank':
-					$connector = new SwedbankConnector($this, $accountId, $accountData);
-					break;
-				case 'seb':
-					$connector = new SebConnector($this, $accountId, $accountData);
-					break;
-				case 'sampo':
-					$connector = new SampoConnector($this, $accountId, $accountData);
-					break;
-				case 'krediidipank':
-					$connector = new KrediidipankConnector($this, $accountId, $accountData);
-				case 'nordea':
-					$connector = new NordeaConnector($this, $accountId, $accountData);
-					break;
-				default:
-					throw new \Exception(sprintf('PangalinkBundle configuration: unknown bank type "%s" for account "%s"', $bankType, $accountId));
-					break;
-			}
-		} else {
+		
+		if(false == array_key_exists($accountId, $this->configs))
 			throw new AccountNotFoundException($accountId);
+		
+		$accountData = $this->configs[$accountId];
+		if(false == array_key_exists('bank', $accountData)) {
+			throw new \Exception(sprintf('PangalinkBundle configuration: missing mandatory parameter "bank" for account "%s"', $accountId));
+		}
+		$bankType = $accountData['bank'];
+		switch($bankType) {
+			case 'swedbank':
+				$connector = new SwedbankConnector($this, $accountId, $accountData);
+				break;
+			case 'seb':
+				$connector = new SebConnector($this, $accountId, $accountData);
+				break;
+			case 'sampo':
+				$connector = new SampoConnector($this, $accountId, $accountData);
+				break;
+			case 'krediidipank':
+				$connector = new KrediidipankConnector($this, $accountId, $accountData);
+			case 'nordea':
+				$connector = new NordeaConnector($this, $accountId, $accountData);
+				break;
+			default:
+				throw new \Exception(sprintf('PangalinkBundle configuration: unknown bank type "%s" for account "%s"', $bankType, $accountId));
+				break;
 		}
 		$this->connectors[$accountId] = $connector;
 		return $connector;
 	}		
 	
+	/**
+	 * Initializes a configuration for a specified connector
+	 */
 	private function initConfig($accountId)
 	{
 		if(isset($this->configs[$accountId]))
@@ -137,21 +141,21 @@ class PangalinkService
 	 */
 	public function getConnectorByRequest(Request $request)
 	{
-		$connectors = $this->getAllConnectors();
-		foreach($connectors as $connector) {						
-			try {
-				/* @var $connector \TFox\PangalinkBundle\Connector\AbstractConnector */
-				$bankResponse = $connector->createBankResponse($request);
-				$connector->checkSignature($bankResponse);
-				
-				return $connector;
-			} catch(BadSignatureException $e) {
-				//Пропускаем банк. если подпись неверна
-			} catch(UnsupportedServiceIdException $e2) {
-				//Пропускаем банк. если сервис не поддерживается
-			}	
-		}
-		return null;
+	    $connectors = $this->getAllConnectors();
+	    foreach($connectors as $connector) {						
+		try {
+		    /* @var $connector \TFox\PangalinkBundle\Connector\AbstractConnector */
+		    $bankResponse = $connector->createBankResponse($request);
+		    $connector->checkSignature($bankResponse);
+
+		    return $connector;
+		} catch(BadSignatureException $e) {
+			// Signatre does not match
+		} catch(UnsupportedServiceIdException $e2) {
+
+		}	
+	    }
+	    return null;
 		
 	}
 	

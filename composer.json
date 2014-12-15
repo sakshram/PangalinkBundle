@@ -10,13 +10,13 @@
 	"homepage" : "http://github.com/tasmanianfox/PangalinkBundle",
 	"license" : "MIT",
 	"authors" : [{
-			"name" : "Sergei Beljakov",
+			"name" : "Sergei Belyakov",
 			"email" : "tasmanianfox@gmail.com"
 		}
 	],
 	"require" : {
-		"symfony/framework-bundle" : "~2.1",
-		"symfony/assetic-bundle" : "~2.1"
+		"symfony/framework-bundle" : "~2.3",
+		"symfony/assetic-bundle" : "~2.3"
 	},
 	"require-dev" : {
 		"symfony/class-loader" : "*",
@@ -31,7 +31,7 @@
 	"target-dir" : "TFox/PangalinkBundle",
 	"extra" : {
 		"branch-alias" : {
-			"dev-master" : "1.2-dev"
+			"dev-master" : "2.0-dev"
 		}
 	}
 }
