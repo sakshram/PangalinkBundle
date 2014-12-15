@@ -93,7 +93,7 @@ abstract class AbstractIPizzaConnector  extends AbstractConnector
 	public function generateFormData()
 	{		
 		$accountData = $this->getConfiguration();
-		
+
 		$formData = array(
 				'VK_SERVICE' => $accountData['service_id'],
 				'VK_VERSION' => $accountData['version'],
@@ -122,19 +122,22 @@ abstract class AbstractIPizzaConnector  extends AbstractConnector
 			throw new CannotGenerateSignatureException();
 		}
 		$formData['VK_MAC'] = base64_encode ($signature);
-		
+
 		return $formData;
 	}
-	
+
 	/**
 	 * Adds data which might be specific for each bank (encoding, ...)
 	 */
 	public function addSpecificFormData($formData) { return $formData; }
-	
+
 	public function generateMacString($input)
 	{
+        if(true == is_null($input))
+            return null;
+
 		$serviceId = key_exists('VK_SERVICE', $input) ? $input['VK_SERVICE'] : -1;
-		
+
 		$keys = key_exists($serviceId, $this->macKeys) ? $this->macKeys[$serviceId] : null;
 		if(is_null($keys))
 			throw new UnsupportedServiceIdException($this->accountId, $serviceId);

@@ -63,15 +63,15 @@ abstract class AbstractConnector
 		/*
 		 * Handle return URL and cancel URL parameters
 		 */
-		if(key_exists('route_return', $this->configuration)) {
+		if(array_key_exists('route_return', $this->configuration)) {
 			$this->configuration['url_return'] = $this->pangalinkService->getRouter()->generate($this->configuration['route_return'], array(), true);
 		}
-		if(key_exists('route_cancel', $this->configuration)) {
+		if(array_key_exists('route_cancel', $this->configuration)) {
 			$this->configuration['url_cancel'] = $this->pangalinkService->getRouter()->generate($this->configuration['route_cancel'], array(), true);
 		}
-		if(!(key_exists('url_return', $this->configuration)))
+		if(!(array_key_exists('url_return', $this->configuration)))
 			throw new MissingMandatoryParameterException('url_return');
-		if(!key_exists('url_cancel', $this->configuration))
+		if(!array_key_exists('url_cancel', $this->configuration))
 			throw new MissingMandatoryParameterException('url_cancel');
 	}
 	
@@ -174,7 +174,7 @@ abstract class AbstractConnector
 	 */
 	public function getButtonImage($imageId)
 	{
-		return key_exists($imageId, $this->buttonImages) ? $this->buttonImages[$imageId] : '';
+		return array_key_exists($imageId, $this->buttonImages) ? $this->buttonImages[$imageId] : '';
 	}
 	
 	/**

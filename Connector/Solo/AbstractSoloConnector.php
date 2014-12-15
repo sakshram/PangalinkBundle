@@ -34,7 +34,7 @@ abstract class AbstractSoloConnector  extends AbstractConnector
 			)
 		);
 		
-		if(key_exists('route_reject', $this->configuration)) {
+		if(array_key_exists('route_reject', $this->configuration)) {
 			$this->configuration['url_reject'] = $this->pangalinkService->getRouter()->generate($this->configuration['route_reject'], array(), true);
 		}
 	}
@@ -115,7 +115,7 @@ abstract class AbstractSoloConnector  extends AbstractConnector
 		$formData = $this->addSpecificFormData($formData);
 		
 		//Add a MAC string
-		if(!key_exists('secret', $accountData))
+		if(!array_key_exists('secret', $accountData))
 			throw new MissingMandatoryParameterException('secret');
 		$secret = $accountData['secret'];
 		$macKeys = $this->macKeys['PAYMENT_REQUEST'];
@@ -140,14 +140,14 @@ abstract class AbstractSoloConnector  extends AbstractConnector
 	
 	public function generateMacString($input)
 	{
-		if(!key_exists('secret', $this->configuration))
+		if(!array_key_exists('secret', $this->configuration))
 			throw new \Exception('Pangalink Bundle: missing mandatory parameter "secret"');
 		
 		$secret = $this->configuration['secret'];
 		$macFields = $this->macKeys['PAYMENT_RESPONSE'];
 		$digitParameters = array();
 		foreach($macFields as $macField) {
-			if(key_exists($macField, $input))
+			if(array_key_exists($macField, $input))
 				$digitParameters[] = $input[$macField];
 		}
 		$digitParameters[] = $secret;
