@@ -41,7 +41,9 @@ class BankResponse
 	
 	public function getParameter($key)
 	{
-		return key_exists($key, $this->data) ? $this->data[$key] : null;
+        if(true == is_null($this->data))
+            return null;
+		return array_key_exists($key, $this->data) ? $this->data[$key] : null;
 	}
 	
 
