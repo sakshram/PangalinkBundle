@@ -11,6 +11,7 @@ use TFox\PangalinkBundle\Connector\IPizza\SwedbankConnector;
 use TFox\PangalinkBundle\Connector\IPizza\SebConnector;
 use TFox\PangalinkBundle\Connector\IPizza\SampoConnector;
 use TFox\PangalinkBundle\Connector\IPizza\KrediidipankConnector;
+use TFox\PangalinkBundle\Connector\IPizza\LHVConnector;
 use Symfony\Component\HttpFoundation\Response;
 use TFox\PangalinkBundle\Exception\BadSignatureException;
 use TFox\PangalinkBundle\Connector\Solo\NordeaConnector;
@@ -45,6 +46,7 @@ class PangalinkService
 	const ID_BANK_SAMPO = 'SAMPOPANK';
 	const ID_BANK_KREDIIDIBANK = 'KREP';
 	const ID_BANK_NORDEA = 'NORDEA';
+	const ID_BANK_LHV = 'LHV';
 	
 	public function __construct(Container $container)
 	{
@@ -88,6 +90,9 @@ class PangalinkService
 			    break;
 			case 'krediidipank':
 				$connector = new KrediidipankConnector($this, $accountId, $accountData);
+			    break;
+			case 'lhv':
+				$connector = new LHVConnector($this, $accountId, $accountData);
 			    break;
 			case 'nordea':
 			    $connector = new NordeaConnector($this, $accountId, $accountData);
