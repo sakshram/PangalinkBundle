@@ -80,7 +80,7 @@ abstract class AbstractConnector
 	return $urlReturn;
     }
     
-       /**
+    /**
      * Generates a cancel url depend on url or route was specified
      */
     public function generateCancelUrl()

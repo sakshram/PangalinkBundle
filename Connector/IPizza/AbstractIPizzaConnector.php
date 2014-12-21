@@ -17,11 +17,6 @@ use TFox\PangalinkBundle\Exception\KeyFileNotFoundException;
 abstract class AbstractIPizzaConnector  extends AbstractConnector
 {
 
-    public function getButtonImagesMapping() 
-    {
-	throw new \Exception('not implemented');
-	return array();
-    }
-    
+
 
 }
