@@ -8,7 +8,7 @@ use TFox\PangalinkBundle\Service\PangalinkService;
 /**
  * Connector for Nordea
  */
-class NordeaConnector extends AbstractSoloConnector 
+class NordeaConnector // extends AbstractSoloConnector 
 {
     public function getBankId() 
     {

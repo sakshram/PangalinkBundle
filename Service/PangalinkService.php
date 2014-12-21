@@ -78,19 +78,20 @@ class PangalinkService
 		$bankType = $accountData['bank'];
 		switch($bankType) {
 			case 'swedbank':
-				$connector = new SwedbankConnector($this, $accountId, $accountData);
-				break;
+			    $connector = new SwedbankConnector($this, $accountId, $accountData);
+			    break;
 			case 'seb':
-				$connector = new SebConnector($this, $accountId, $accountData);
-				break;
+			    $connector = new SebConnector($this, $accountId, $accountData);
+			    break;
 			case 'sampo':
-				$connector = new SampoConnector($this, $accountId, $accountData);
-				break;
+			    $connector = new SampoConnector($this, $accountId, $accountData);
+			    break;
 			case 'krediidipank':
 				$connector = new KrediidipankConnector($this, $accountId, $accountData);
+			    break;
 			case 'nordea':
-				$connector = new NordeaConnector($this, $accountId, $accountData);
-				break;
+			    $connector = new NordeaConnector($this, $accountId, $accountData);
+			    break;
 			default:
 				throw new \Exception(sprintf('PangalinkBundle configuration: unknown bank type "%s" for account "%s"', $bankType, $accountId));
 				break;
