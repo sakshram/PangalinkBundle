@@ -5,6 +5,7 @@ use Symfony\Component\DependencyInjection\Container;
 use TFox\PangalinkBundle\DependencyInjection\TFoxPangalinkExtension;
 use TFox\PangalinkBundle\Exception\AccountNotFoundException;
 use TFox\PangalinkBundle\Exception\CannotGenerateSignatureException;
+use TFox\PangalinkBundle\Request\AbstractRequest;
 
 class PangalinkExtension extends \Twig_Extension 
 {
@@ -58,16 +59,17 @@ class PangalinkExtension extends \Twig_Extension
 	    return 'pangalink_swedbank_extension';
     }
 
-    public function printFormInputs($accountId = 'default')
+    
+    
+    
+    
+    public function printFormInputs(AbstractRequest $request)
     {
-	$connector = $this->service->getConnector($accountId);			
-	$formData = $connector->getFormData();		
+	$formData = $request->getFormData();	
 	$html = '';
-	
 	foreach($formData as $fieldName => $fieldValue) {
 		$html .= sprintf("<input type=\"hidden\" name=\"%s\" value=\"%s\">\n", $fieldName, $fieldValue);
 	}
-
 	return $html;
     }
 
@@ -75,24 +77,24 @@ class PangalinkExtension extends \Twig_Extension
      * Returns action URL for form
      * @return string
      */
-    public function getActionUrl($accountId = 'default')
+    public function getActionUrl(AbstractRequest $request)
     {
-	return $this->service->getConnector($accountId)->getServiceUrl();
+	return $request->getServiceUrl();
     }
 
     /**
      * Return a code for form with submit graphic button
      * @param string $accountId
      */
-    public function printButtonCode($accountId, $imageId)
+    public function printButtonCode(AbstractRequest $request, $imageId)
     {
 	/* @var $connector \TFox\PangalinkBundle\Connector\AbstractConnector */
-	$connector = $this->service->getConnector($accountId);
+	$connector = $request->getConnector();
 	$imageRelPath = $connector->getButtonImagePath($imageId);		
 	$imageFullPath = $this->assetsHelper->getUrl($imageRelPath);
 
-	$actionUrl = $this->getActionUrl($accountId);
-	$inputFieldsHtml = $this->printFormInputs($accountId);
+	$actionUrl = $this->getActionUrl($request);
+	$inputFieldsHtml = $this->printFormInputs($request);
 	$formId = 'form_pangalink_'.substr(md5($inputFieldsHtml), 0, 15);
 
 	$html = <<<HTML
