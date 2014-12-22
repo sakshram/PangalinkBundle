@@ -7,7 +7,7 @@ use TFox\PangalinkBundle\Connector\IPizza\AbstractIPizzaConnector;
 use TFox\PangalinkBundle\TFoxPangalinkBundle;
 use TFox\PangalinkBundle\Service\PangalinkService;
 use TFox\PangalinkBundle\Request\IPizza\Payment\SampoPaymentRequest;
-use TFox\PangalinkBundle\Response\IPizza\SampoPaymentResponse;
+use TFox\PangalinkBundle\Response\IPizza\Payment\SampoPaymentResponse;
 
 /**
  * Connector for Sampo Bank (Danske)

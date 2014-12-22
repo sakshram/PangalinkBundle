@@ -6,7 +6,7 @@ use TFox\PangalinkBundle\Connector\Solo\AbstractSoloConnector;
 use TFox\PangalinkBundle\Service\PangalinkService;
 use TFox\PangalinkBundle\Request\Solo\Payment\NordeaPaymentRequest;
 use Symfony\Component\HttpFoundation\Request;
-use TFox\PangalinkBundle\Response\Solo\NordeaPaymentResponse;
+use TFox\PangalinkBundle\Response\Solo\Payment\NordeaPaymentResponse;
 
 /**
  * Connector for Nordea

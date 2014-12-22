@@ -1,5 +1,5 @@
 <?php
-namespace TFox\PangalinkBundle\Response\IPizza;
+namespace TFox\PangalinkBundle\Response\IPizza\Payment;
 
 use TFox\PangalinkBundle\Response\AbstractResponse;
 use TFox\PangalinkBundle\Response\AbstractPaymentResponse;
@@ -158,9 +158,10 @@ abstract class AbstractIPizzaPaymentResponse extends AbstractPaymentResponse
     public function getDateTime($convert = true)
     {
 	$value = $this->getMappedProperty(AbstractIPizzaPaymentResponse::PROPERTY_DATETIME);
+
 	if(true == $convert) {
 	    $value = str_replace('T', ' ', $value);
-	    $value = \DateTime::createFromFormat('Y-m-d H:I:sO', $value);
+	    $value = \DateTime::createFromFormat('Y-m-d H:i:sP', $value);
 	}
 	return $value;
     }   

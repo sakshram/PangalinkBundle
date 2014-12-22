@@ -62,8 +62,11 @@ class PangalinkExtension extends \Twig_Extension
     
     
     
-    
-    public function printFormInputs(AbstractRequest $request)
+    /**
+     * 
+     * @param AbstractRequest $request
+     */
+    public function printFormInputs($request)
     {
 	$formData = $request->getFormData();	
 	$html = '';
@@ -75,18 +78,19 @@ class PangalinkExtension extends \Twig_Extension
 
     /**
      * Returns action URL for form
+     * @param AbstractRequest $request
      * @return string
      */
-    public function getActionUrl(AbstractRequest $request)
+    public function getActionUrl($request)
     {
 	return $request->getServiceUrl();
     }
 
     /**
      * Return a code for form with submit graphic button
-     * @param string $accountId
+     * @param AbstractRequest $request
      */
-    public function printButtonCode(AbstractRequest $request, $imageId)
+    public function printButtonCode($request, $imageId)
     {
 	/* @var $connector \TFox\PangalinkBundle\Connector\AbstractConnector */
 	$connector = $request->getConnector();

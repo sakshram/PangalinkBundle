@@ -6,7 +6,7 @@ use TFox\PangalinkBundle\Exception\UnsupportedServiceIdException;
 use TFox\PangalinkBundle\TFoxPangalinkBundle;
 use TFox\PangalinkBundle\Service\PangalinkService;
 use TFox\PangalinkBundle\Request\IPizza\Payment\LHVPaymentRequest;
-use TFox\PangalinkBundle\Response\IPizza\LHVPaymentResponse;
+use TFox\PangalinkBundle\Response\IPizza\Payment\LHVPaymentResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

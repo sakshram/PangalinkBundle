@@ -7,7 +7,7 @@ use TFox\PangalinkBundle\TFoxPangalinkBundle;
 use TFox\PangalinkBundle\Service\PangalinkService;
 use TFox\PangalinkBundle\Request\IPizza\Payment\KrediidipankPaymentRequest;
 use Symfony\Component\HttpFoundation\Request;
-use TFox\PangalinkBundle\Response\IPizza\KrediidipankPaymentResponse;
+use TFox\PangalinkBundle\Response\IPizza\Payment\KrediidipankPaymentResponse;
 
 /**
  * Connector for Krediidipank

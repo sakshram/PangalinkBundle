@@ -7,7 +7,7 @@ use TFox\PangalinkBundle\TFoxPangalinkBundle;
 use TFox\PangalinkBundle\Service\PangalinkService;
 use TFox\PangalinkBundle\Request\IPizza\Payment\SwedbankPaymentRequest;
 use Symfony\Component\HttpFoundation\Request;
-use TFox\PangalinkBundle\Response\IPizza\SwedbankPaymentResponse;
+use TFox\PangalinkBundle\Response\IPizza\Payment\SwedbankPaymentResponse;
 
 /**
  * Connector for Swedbank

@@ -1,5 +1,5 @@
 <?php
-namespace TFox\PangalinkBundle\Response\Solo;
+namespace TFox\PangalinkBundle\Response\Solo\Payment;
 
 use TFox\PangalinkBundle\Response\AbstractResponse;
 use TFox\PangalinkBundle\Response\AbstractPaymentResponse;

@@ -10,6 +10,7 @@ Banks available:
 * Krediidipank
 * Danske
 * Nordea
+* LHV
 
 
 
@@ -20,7 +21,7 @@ Installation
 <pre><code>
 "require": {
   ...
-  "tfox/pangalink-bundle": "1.2.*@dev"
+  "tfox/pangalink-bundle": "2.0.*@dev"
   ...
 </code></pre>
 * Run "php composer.phar update"
@@ -42,7 +43,7 @@ t_fox_pangalink:
         #First bank
         #ID of the first bank. This ID will be used in system. Feel free to write any ID you wish
         swedbank:
-            #Type of bank. Possible arguments: swedbank, seb, krediidipank, sampo, nordea
+            #Type of bank. Possible arguments: swedbank, seb, krediidipank, sampo, nordea, lhv
             bank: swedbank
             #Service URL. Remove in production mode if real bank's URL is necessary
             service_url: "https://pangalink.net/banklink/swedbank"
@@ -107,38 +108,45 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as Sensio;
 class SomeController extends BaseController
 {
 
-	/**
-	 * @Sensio\Route
-	 * @Sensio\Template
-	 */
-	public function indexAction()
-	{
-    //Amount, payment description and some transaction ID
-		$amount = 10.0;
-		$description = 'Symfony2 pangalink bundle test';
-		$transactionId = mt_rand(0, 999999);
-		$transactionId = str_pad($transactionId, 6, '0');
-	
-		/* @var $service \TFox\PangalinkBundle\Service\PangalinkService */
-		$service = $this->get('tfox.pangalink.service');
-    // 'swedbank' is ID of the bank from config.yml
-		/* @var $connector \TFox\PangalinkBundle\Connector\SwedbankConnector */		
-		$connector = $service->getConnector('swedbank');
-		$connector
-			->setAmount($amount)
-			->setDescription($description)
-			->setTransactionId($transactionId)
-			->setLanguage('EST') //Possible values: EST, ENG, RUS
-      //Optional. Warning: don't forget to make a 7 + 3 + 1 check of reference number,
-      //otherwise bank might not accept sended data
-      //Further info: http://www.pangaliit.ee/et/arveldused/7-3-1meetod
-      //->setReferenceNumber('123456')
-      ;
-			
-    //It isn't necessary to pass any parameters to controller. Just an example. 
-		return array('amount' => $amount);
-		
-	}
+    /**
+     * @Sensio\Route
+     * @Sensio\Template
+     */
+    public function indexAction()
+    {
+        //Amount, payment description and some transaction ID
+        $amount = 10.0;
+        $description = 'Symfony2 pangalink bundle test';
+        $transactionId = mt_rand(0, 999999);
+        $transactionId = str_pad($transactionId, 6, '0');
+
+        /* @var $service \TFox\PangalinkBundle\Service\PangalinkService */
+        $service = $this->get('tfox.pangalink.service');
+         // 'swedbank' is ID of the bank from config.yml
+        /* @var $connector \TFox\PangalinkBundle\Connector\SwedbankConnector */		
+        $connector = $service->getConnector('swedbank');
+        $request = $connector->createPaymentRequest();
+        $request
+            ->setAmount($amount)
+            ->setComment($description)
+            ->setTransactionId($transactionId)
+            ->setLanguage('EST') //Possible values: EST, ENG, RUS
+            // Warning: RUS is not applicable for Nordea
+        ;
+
+        // Warning: date is not applicable for Solo protocol (Nordea)
+        $request->setDateTime(new \DateTime());
+            
+        //Optional. Warning: don't forget to make a 7 + 3 + 1 check of reference number,
+        //otherwise bank might not accept sended data
+        //Further info: http://www.pangaliit.ee/et/arveldused/7-3-1meetod
+        //->setReferenceNumber('123456')
+        ;
+
+        return array('payment_request' => $request);
+
+    }
+}
 </code></pre>
 
 * Now you can render your form. You have two ways of doing it. The first way allows you to make any design of the form you want:
@@ -148,11 +156,10 @@ class SomeController extends BaseController
 //YourBundle/Resources/views/Some/index.html.twig
 
 {# 'swedbank' is bank ID which was defined in config.yml  #}
-&lt;form method="post" action="{{ pangalink_action_url('swedbank') }}"&gt;
-{{ pangalink_form_data('swedbank') }}
+&lt;form method="post" action="{{ pangalink_action_url(payment_request) }}"&gt;
+{{ pangalink_form_data(payment_request) }}
 
 {# Just an argument from controller  #}
-Summ: {{ amount }}<br />
 
 &lt;input type="submit" value="Begin payment"&gt;
 &lt;/form&gt;
@@ -165,17 +172,9 @@ Summ: {{ amount }}<br />
 
 //YourBundle/Resources/views/Some/index.html.twig
 
-{# The first argument is bank ID. The second argument is a button code. Watch the table below.  #}
+{# The first argument is a payment request received from controller. The second argument is a button code. Watch the table below.  #}
 
-{{ pangalink_button('swedbank', '88x31') }}
-
-{{ pangalink_button('swedbank', '120x60') }}
-
-{{ pangalink_button('swedbank', '217x31_est') }}
-
-{{ pangalink_button('swedbank', '217x31_rus') }}
-
-{{ pangalink_button('swedbank', '217x31_eng') }}
+{{ pangalink_button(payment_request, '88x31') }}
 
 </code></pre>
 
@@ -203,6 +202,8 @@ In the table below are provided codes for images which are available in Pangalin
 |                        | 180x70                        |
 | Nordea                 | 88x31                         |
 |                        | 177x56                        |
+| LHV                    | 88x31                         |
+|                        | 120x60                        |
 
 
 * The last task is to process a response which was sent by bank. Let's look to controller again:
@@ -215,37 +216,41 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as Sensio;
 class SomeController extends BaseController
 {
 
-	/**
-	 * @Sensio\Route("/process")
-	 * @Sensio\Template
-	 */
-	public function processAction(Request $request)
-  {
-		/* @var $service \TFox\PangalinkBundle\Service\PangalinkService */
-		$service = $this->get('tfox.pangalink.service');
-		/* @var $connector \TFox\PangalinkBundle\Connector\SwedbankConnector */
-		$connector = $service->getConnector('swedbank');
-		//...or detect appropriate connector automatically
-		// $connector = $service->getConnectorByRequest($request);
-		$connector->processPayment($request);
-		
-		$data = $connector->getResponse()->getData();
-    //Now $data contains raw response data
-		$str = var_export($data, true); //Would you like to look at raw bank response?
-    //A simple check if service was payed
-		$result = $connector->isPaymentSuccessful() ? 'Success' : 'Failure';
-    //This order number is generated by bank. Might be useful for logs.
-		$orderNr = $connector->getResponse()->getOrderNumber();
-    //When payment was made?
-		$date = $connector->getResponse()->getOrderDate();
-		
-		return array('data' => $str, 'status' => $result, 
-			'order_number' => $orderNr, 'sender_name' => $connector->getResponse()->getSenderName(),
-			'sender_account' => $connector->getResponse()->getSenderAccountNumber(),
-			'order_date' => $date
-		);
-  }
-  
-</codt></pre>
+    /**
+     * @Sensio\Route("/process")
+     * @Sensio\Template
+     */
+    public function processAction(Request $request)
+    {
+            /* @var $service \TFox\PangalinkBundle\Service\PangalinkService */
+            $service = $this->get('tfox.pangalink.service');
+            // Get a response from bank. 
+            // The bundle automatically determines an appropriate connector
+            $paymentResponse = $service->getPaymentResponse($request);
 
-Further information will be available soon.
+            // If no appropriate connector found, the function "getPaymentResponse" returns null
+            if(true == is_null($paymentResponse))
+                throw new \Exception('Could not determine a bank operator');
+
+            // Check if payment was successful
+            if(true == $paymentResponse->isSuccessful()) {
+                // Get some properties 
+                $paymentResponse->getBankId();
+                $paymentResponse->getOrderNumber();
+                $paymentResponse->getTransactionId();
+                $paymentResponse->getDateTime();
+            }
+
+            // Get ID of the connector defined in the Symfony confiruration
+            $accountId = $paymentResponse ? $paymentResponse->getConnector()->getAccountId() : 'NONE';
+            // Format status
+            $status = $paymentResponse && $paymentResponse->isSuccessful() ? 'YES' : 'NO';
+
+            return array(
+                'response' => $paymentResponse,
+                'account_id' => $accountId,
+                'status' => $status
+            );
+    }
+}
+</codt></pre>
