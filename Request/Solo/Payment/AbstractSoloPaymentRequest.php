@@ -70,6 +70,6 @@ abstract class AbstractSoloPaymentRequest extends AbstractPaymentRequest
     
     public function getSecret()
     {
-	return $this->getConnector()->getConfigurationValue('secret');
+	return $this->getConnector()->getSecret();
     }
 }

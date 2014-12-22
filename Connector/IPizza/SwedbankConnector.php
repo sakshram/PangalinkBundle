@@ -6,6 +6,8 @@ use TFox\PangalinkBundle\Exception\UnsupportedServiceIdException;
 use TFox\PangalinkBundle\TFoxPangalinkBundle;
 use TFox\PangalinkBundle\Service\PangalinkService;
 use TFox\PangalinkBundle\Request\IPizza\Payment\SwedbankPaymentRequest;
+use Symfony\Component\HttpFoundation\Request;
+use TFox\PangalinkBundle\Response\IPizza\SwedbankPaymentResponse;
 
 /**
  * Connector for Swedbank
@@ -14,13 +16,6 @@ use TFox\PangalinkBundle\Request\IPizza\Payment\SwedbankPaymentRequest;
 class SwedbankConnector extends AbstractIPizzaConnector
 {
     protected $serviceUrl = 'https://www.swedbank.ee/banklink';
-    
-    public function createPaymentRequest() 
-    {
-	$request = new SwedbankPaymentRequest($this);
-	$request->initFormFields();	
-	return $request;
-    }
     
     public function getBankId() 
     {
@@ -37,5 +32,17 @@ class SwedbankConnector extends AbstractIPizzaConnector
 	    '217x31_rus' => 'swed_4.gif',
 	    '217x31_eng' => 'swed_5.gif'
 	);
+    }
+    
+    public function createPaymentRequest() 
+    {
+	$request = new SwedbankPaymentRequest($this);
+	$request->initFormFields();	
+	return $request;
+    }
+    
+    public function createPaymentResponse(Request $request) {
+	$response = new SwedbankPaymentResponse($this, $request);
+	return $response;
     }
 }

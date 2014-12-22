@@ -5,6 +5,8 @@ namespace TFox\PangalinkBundle\Connector\Solo;
 use TFox\PangalinkBundle\Connector\Solo\AbstractSoloConnector;
 use TFox\PangalinkBundle\Service\PangalinkService;
 use TFox\PangalinkBundle\Request\Solo\Payment\NordeaPaymentRequest;
+use Symfony\Component\HttpFoundation\Request;
+use TFox\PangalinkBundle\Response\Solo\NordeaPaymentResponse;
 
 /**
  * Connector for Nordea
@@ -23,6 +25,11 @@ class NordeaConnector extends AbstractSoloConnector
 	$request = new NordeaPaymentRequest($this);
 	$request->initFormFields();	
 	return $request;
+    }
+    
+    public function createPaymentResponse(Request $request) {
+	$response = new NordeaPaymentResponse($this, $request);
+	return $response;
     }
     
     

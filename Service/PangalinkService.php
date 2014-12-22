@@ -64,14 +64,16 @@ class PangalinkService
 	public function getConnector($accountId = 'default')
 	{
 		// Connector was already initialized
-		if(key_exists($accountId, $this->connectors))
-			return $this->connectors[$accountId];
+		if(key_exists($accountId, $this->connectors)) {
+		    return $this->connectors[$accountId];
+		}
 		
 		$connector = null;
 		$this->initConfig($accountId);
 		
-		if(false == array_key_exists($accountId, $this->configs))
-			throw new AccountNotFoundException($accountId);
+		if(false == array_key_exists($accountId, $this->configs)) {
+		    throw new AccountNotFoundException($accountId);
+		}			
 		
 		$accountData = $this->configs[$accountId];
 		if(false == array_key_exists('bank', $accountData)) {
@@ -127,11 +129,13 @@ class PangalinkService
 	private function getAllConnectors()
 	{
 		$containerKey = TFoxPangalinkExtension::PREFIX_CONTAINER_ACCOUNT_IDS;
-		if(false == $this->container->hasParameter($containerKey))
-			throw new \Exception('Parameter '.$containerKey.' was not found in container.');	
+		if(false == $this->container->hasParameter($containerKey)) {
+		    throw new \Exception('Parameter '.$containerKey.' was not found in container.');
+		}	
 		$accountIds = $this->container->getParameter($containerKey);
-		if(!is_array($accountIds))
-			throw new \Exception('Parameter '.$containerKey.' is not an array');
+		if(!is_array($accountIds)) {
+		    throw new \Exception('Parameter '.$containerKey.' is not an array');
+		}		
 		
 		$connectors = array();
 		foreach($accountIds as $accountId) {
@@ -143,18 +147,15 @@ class PangalinkService
 	}
 	
 	/**
-	 * Finds a suitable connector by received response
+	 * Finds a suitable connector by received response and returns a payment response
 	 */
-	public function getConnectorByRequest(Request $request)
+	public function getPaymentResponse(Request $request)
 	{
 	    $connectors = $this->getAllConnectors();
 	    foreach($connectors as $connector) {						
 		try {
-		    /* @var $connector \TFox\PangalinkBundle\Connector\AbstractConnector */
-		    $bankResponse = $connector->createBankResponse($request);
-		    $connector->checkSignature($bankResponse);
-
-		    return $connector;
+		    $paymentResponse = $connector->createPaymentResponse($request);
+		    return $paymentResponse;
 		} catch(BadSignatureException $e) {
 			// Signatre does not match
 		} catch(UnsupportedServiceIdException $e2) {

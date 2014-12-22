@@ -7,6 +7,7 @@ use TFox\PangalinkBundle\Connector\IPizza\AbstractIPizzaConnector;
 use TFox\PangalinkBundle\TFoxPangalinkBundle;
 use TFox\PangalinkBundle\Service\PangalinkService;
 use TFox\PangalinkBundle\Request\IPizza\Payment\SampoPaymentRequest;
+use TFox\PangalinkBundle\Response\IPizza\SampoPaymentResponse;
 
 /**
  * Connector for Sampo Bank (Danske)
@@ -21,6 +22,11 @@ class SampoConnector extends AbstractIPizzaConnector
 	$request = new SampoPaymentRequest($this);
 	$request->initFormFields();	
 	return $request;
+    }
+    
+    public function createPaymentResponse(Request $request) {
+	$response = new SampoPaymentResponse($this, $request);
+	return $response;
     }
     
     public function getBankId() 

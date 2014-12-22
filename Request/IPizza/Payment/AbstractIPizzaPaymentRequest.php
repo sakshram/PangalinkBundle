@@ -11,6 +11,11 @@ use TFox\PangalinkBundle\Exception\KeyFileNotFoundException;
 abstract class AbstractIPizzaPaymentRequest extends AbstractPaymentRequest
 {
 
+    /**
+     * @var \TFox\PangalinkBundle\Connector\IPizza\AbstractIPizzaConnector
+     */
+    protected $connector;
+    
     public function initFormFields()
     {
 	$this->formFieldsMapping = array(
@@ -34,13 +39,6 @@ abstract class AbstractIPizzaPaymentRequest extends AbstractPaymentRequest
     
     public function getPrivateKey()
     {
-	$keyFilePath = sprintf('%s%s%s', $this->getConnector()->getPangalinkService()->getKernelRootPath(), 
-	    DIRECTORY_SEPARATOR, $this->getConnector()->getConfigurationValue('private_key'));
-	
-	if(false == file_exists($keyFilePath))
-	    throw new KeyFileNotFoundException($keyFilePath);
-	
-	$key = file_get_contents($keyFilePath);
-	return $key;
+	return $this->connector->getPrivateKey();
     }
 }

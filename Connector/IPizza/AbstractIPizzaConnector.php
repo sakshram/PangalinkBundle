@@ -17,6 +17,29 @@ use TFox\PangalinkBundle\Exception\KeyFileNotFoundException;
 abstract class AbstractIPizzaConnector  extends AbstractConnector
 {
 
+    public function getPrivateKey()
+    {
+	$keyFilePath = sprintf('%s%s%s', $this->getPangalinkService()->getKernelRootPath(), 
+	    DIRECTORY_SEPARATOR, $this->getConfigurationValue('private_key'));
+	
+	if(false == file_exists($keyFilePath)) {
+	    throw new KeyFileNotFoundException($keyFilePath);
+	}    
+	
+	$key = file_get_contents($keyFilePath);
+	return $key;
+    }
 
-
+    public function getBankCertificate()
+    {
+	$keyFilePath = sprintf('%s%s%s', $this->getPangalinkService()->getKernelRootPath(), 
+	    DIRECTORY_SEPARATOR, $this->getConfigurationValue('bank_certificate'));
+	
+	if(false == file_exists($keyFilePath)) {
+	    throw new KeyFileNotFoundException($keyFilePath);
+	}    
+	
+	$key = file_get_contents($keyFilePath);
+	return $key;
+    }
 }

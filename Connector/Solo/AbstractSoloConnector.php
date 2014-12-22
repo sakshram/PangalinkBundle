@@ -36,4 +36,9 @@ abstract class AbstractSoloConnector  extends AbstractConnector
 	}
 	return $urlReject;
     }
+    
+    public function getSecret()
+    {
+	return $this->getConfigurationValue('secret');
+    }
 }

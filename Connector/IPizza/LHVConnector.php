@@ -6,6 +6,8 @@ use TFox\PangalinkBundle\Exception\UnsupportedServiceIdException;
 use TFox\PangalinkBundle\TFoxPangalinkBundle;
 use TFox\PangalinkBundle\Service\PangalinkService;
 use TFox\PangalinkBundle\Request\IPizza\Payment\LHVPaymentRequest;
+use TFox\PangalinkBundle\Response\IPizza\LHVPaymentResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Connector for LHV
@@ -18,6 +20,11 @@ class LHVConnector extends AbstractIPizzaConnector
     public function getBankId() 
     {
 	return PangalinkService::ID_BANK_LHV;
+    }
+    
+    public function createPaymentResponse(Request $request) {
+	$response = new LHVPaymentResponse($this, $request);
+	return $response;
     }
     
     public function createPaymentRequest() 

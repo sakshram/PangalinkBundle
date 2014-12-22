@@ -6,6 +6,8 @@ use TFox\PangalinkBundle\Exception\UnsupportedServiceIdException;
 use TFox\PangalinkBundle\TFoxPangalinkBundle;
 use TFox\PangalinkBundle\Service\PangalinkService;
 use TFox\PangalinkBundle\Request\IPizza\Payment\SebPaymentRequest;
+use TFox\PangalinkBundle\Response\IPizza\SebPaymentResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Connector for SEB
@@ -25,6 +27,11 @@ class SebConnector extends AbstractIPizzaConnector
 	$request = new SebPaymentRequest($this);
 	$request->initFormFields();	
 	return $request;
+    }
+    
+    public function createPaymentResponse(Request $request) {
+	$response = new SebPaymentResponse($this, $request);
+	return $response;
     }
     
     public function getButtonImagesMapping() 

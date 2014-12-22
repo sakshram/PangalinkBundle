@@ -6,6 +6,8 @@ use TFox\PangalinkBundle\Exception\UnsupportedServiceIdException;
 use TFox\PangalinkBundle\TFoxPangalinkBundle;
 use TFox\PangalinkBundle\Service\PangalinkService;
 use TFox\PangalinkBundle\Request\IPizza\Payment\KrediidipankPaymentRequest;
+use Symfony\Component\HttpFoundation\Request;
+use TFox\PangalinkBundle\Response\IPizza\KrediidipankPaymentResponse;
 
 /**
  * Connector for Krediidipank
@@ -27,6 +29,10 @@ class KrediidipankConnector extends AbstractIPizzaConnector
 	return $request;
     }
     
+    public function createPaymentResponse(Request $request) {
+	$response = new KrediidipankPaymentResponse($this, $request);
+	return $response;
+    }
     
     public function getButtonImagesMapping() 
     {

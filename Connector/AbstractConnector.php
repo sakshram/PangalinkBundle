@@ -40,7 +40,9 @@ abstract class AbstractConnector
     
     const PATH_IMAGES = 'bundles/tfoxpangalink/img';
     
+    // Payment
     public abstract function createPaymentRequest();
+    public abstract function createPaymentResponse(Request  $request);
     
 
     public function __construct($pangalinkService, $accountId, $configuration)
@@ -157,4 +159,8 @@ abstract class AbstractConnector
 	return $this->pangalinkService;
     }
 
+    public function getAccountId()
+    {
+	return $this->accountId;
+    }
 }
