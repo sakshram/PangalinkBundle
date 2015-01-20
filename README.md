@@ -46,7 +46,7 @@ t_fox_pangalink:
             #Type of bank. Possible arguments: swedbank, seb, krediidipank, sampo, nordea, lhv
             bank: swedbank
             #Service URL. Remove in production mode if real bank's URL is necessary
-            service_url: "https://pangalink.net/banklink/swedbank"
+            service_url: "https://pangalink.net/banklink/swedbank-common"
             #Vendor's bank account number
             account_number: 123456
             #Vendor's name
