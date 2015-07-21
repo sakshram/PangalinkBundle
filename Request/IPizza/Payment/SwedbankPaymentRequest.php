@@ -16,6 +16,7 @@ class SwedbankPaymentRequest extends AbstractIPizzaPaymentRequest
 
     public function __construct(SwedbankConnector $connector)
     {
+        parent::__construct();
         $this->connector = $connector;
     }
 
@@ -50,8 +51,8 @@ class SwedbankPaymentRequest extends AbstractIPizzaPaymentRequest
             $formData[$this->formFieldsMapping[AbstractPaymentRequest::FORM_FIELD_DATETIME]] = $datetime;
         }
 
-        $urlReturn = $this->getUrlReturn() ? $this->getUrlReturn() : $this->connector->generateReturnUrl();
-        $urlCancel = $this->getUrlCancel() ? $this->getUrlCancel() : $this->connector->generateCancelUrl();
+        $urlReturn = $this->getUrlReturnOrNull();
+        $urlCancel = $this->getUrlCancelOrNull();
         $macFields = array($this->getServiceId(), $this->getVersion(), $this->getVendorId(), $this->getTransactionId(),
             $this->getAmount(), $this->getCurrency(), $this->getRecipientAccount(), $this->getRecipientName(),
             $this->getReferenceNumber(), $this->getComment(), $urlReturn, $urlCancel,

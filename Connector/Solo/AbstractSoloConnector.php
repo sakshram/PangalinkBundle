@@ -13,7 +13,7 @@ use TFox\PangalinkBundle\Connector\AbstractConnector;
 /**
  * Common methods for Solo protocol
  */
-abstract class AbstractSoloConnector  extends AbstractConnector
+abstract class AbstractSoloConnector extends AbstractConnector
 {
 
     /**
@@ -21,24 +21,24 @@ abstract class AbstractSoloConnector  extends AbstractConnector
      */
     public function generateRejectUrl()
     {
-	$urlReject = null;
-	if(true == array_key_exists('route_reject', $this->configuration)) {
-	    $urlReject = $this->pangalinkService
-		->getRouter()
-		->generate($this->configuration['route_reject'], array(), true);
-	}
-	if(true == is_null($urlReject)) {
-	    if(false == array_key_exists('url_reject', $this->configuration)) {
-		throw new \Exception(sprintf('Neither reject URL nor reject route is specified for connector "%s"', 
-		    $this->accountId));
-	    }
-	    $urlReject = $this->configuration['url_reject'];
-	}
-	return $urlReject;
+        $urlReject = null;
+        if (true == array_key_exists('route_reject', $this->configuration)) {
+            $urlReject = $this->pangalinkService
+                ->getRouter()
+                ->generate($this->configuration['route_reject'], array(), true);
+        }
+        if (true == is_null($urlReject)) {
+            if (false == array_key_exists('url_reject', $this->configuration)) {
+                throw new \Exception(sprintf('Neither reject URL nor reject route is specified for connector "%s"',
+                    $this->accountId));
+            }
+            $urlReject = $this->configuration['url_reject'];
+        }
+        return $urlReject;
     }
-    
+
     public function getSecret()
     {
-	return $this->getConfigurationValue('secret');
+        return $this->getConfigurationValue('secret');
     }
 }

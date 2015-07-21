@@ -11,34 +11,35 @@ use TFox\PangalinkBundle\Response\Solo\Payment\NordeaPaymentResponse;
 /**
  * Connector for Nordea
  */
-class NordeaConnector extends AbstractSoloConnector 
+class NordeaConnector extends AbstractSoloConnector
 {
     protected $serviceUrl = 'https://netbank.nordea.com/pnbepay/epayn.jsp';
-    
-    public function getBankId() 
+
+    public function getBankId()
     {
-	return PangalinkService::ID_BANK_NORDEA;
+        return PangalinkService::ID_BANK_NORDEA;
     }
 
-    public function createPaymentRequest() 
+    public function createPaymentRequest()
     {
-	$request = new NordeaPaymentRequest($this);
-	$request->initFormFields();	
-	return $request;
+        $request = new NordeaPaymentRequest($this);
+        $request->initFormFields();
+        return $request;
     }
-    
-    public function createPaymentResponse(Request $request) {
-	$response = new NordeaPaymentResponse($this, $request);
-	return $response;
-    }
-    
-    
-    public function getButtonImagesMapping() 
+
+    public function createPaymentResponse(Request $request)
     {
-	return array(
-	    '88x31' => 'nordea_1.gif',
-	    '177x56' => 'nordea_2.png',
-	    '120x60' => 'nordea_3.png'
-	);
+        $response = new NordeaPaymentResponse($this, $request);
+        return $response;
+    }
+
+
+    public function getButtonImagesMapping()
+    {
+        return array(
+            '88x31' => 'nordea_1.gif',
+            '177x56' => 'nordea_2.png',
+            '120x60' => 'nordea_3.png'
+        );
     }
 }
