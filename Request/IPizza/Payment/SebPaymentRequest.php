@@ -34,7 +34,10 @@ class SebPaymentRequest extends AbstractIPizzaPaymentRequest
             ->setEncoding('UTF-8')
             ->setServiceUrl($this->connector->getServiceUrl())
             ->setServiceId('1011')
-            ->setVersion('008');
+            ->setVersion('008')
+            ->setUrlReturn($this->getUrlReturnOrNull())
+            ->setUrlCancel($this->getUrlCancelOrNull())
+        ;
 
     }
 

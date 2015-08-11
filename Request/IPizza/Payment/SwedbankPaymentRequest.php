@@ -34,7 +34,10 @@ class SwedbankPaymentRequest extends AbstractIPizzaPaymentRequest
             ->setEncoding('UTF-8')
             ->setServiceUrl($this->connector->getServiceUrl())
             ->setServiceId('1011')
-            ->setVersion('008');
+            ->setVersion('008')
+            ->setUrlReturn($this->getUrlReturnOrNull())
+            ->setUrlCancel($this->getUrlCancelOrNull())
+        ;
     }
 
     public function getFormData()
@@ -53,6 +56,7 @@ class SwedbankPaymentRequest extends AbstractIPizzaPaymentRequest
 
         $urlReturn = $this->getUrlReturnOrNull();
         $urlCancel = $this->getUrlCancelOrNull();
+
         $macFields = array($this->getServiceId(), $this->getVersion(), $this->getVendorId(), $this->getTransactionId(),
             $this->getAmount(), $this->getCurrency(), $this->getRecipientAccount(), $this->getRecipientName(),
             $this->getReferenceNumber(), $this->getComment(), $urlReturn, $urlCancel,
