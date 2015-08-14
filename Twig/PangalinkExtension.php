@@ -68,7 +68,8 @@ class PangalinkExtension extends \Twig_Extension
      */
     public function printFormInputs($request)
     {
-	$formData = $request->getFormData();	
+	$formData = $request->getFormData();
+
 	$html = '';
 	foreach($formData as $fieldName => $fieldValue) {
 		$html .= sprintf("<input type=\"hidden\" name=\"%s\" value=\"%s\">\n", $fieldName, $fieldValue);

@@ -27,8 +27,6 @@ class SwedbankPaymentRequest extends AbstractIPizzaPaymentRequest
         $this
             ->setVendorId($this->connector->getConfigurationValue('vendor_id'))
             ->setCurrency('EUR')
-            ->setRecipientAccount($this->connector->getConfigurationValue('account_number'))
-            ->setRecipientName($this->connector->getConfigurationValue('account_owner'))
             ->setReferenceNumber('')
             ->setLanguage('EST')
             ->setEncoding('UTF-8')
@@ -44,13 +42,25 @@ class SwedbankPaymentRequest extends AbstractIPizzaPaymentRequest
         $urlReturn = $this->getUrlReturnOrNull();
         $urlCancel = $this->getUrlCancelOrNull();
 
-        if(is_null($this->getRecipientAccount()) || is_null($this->getRecipientName())) {
+        $recipientAccountNumber = $this->getMappedFieldOrNull('account_number');
+        if(true == is_null($recipientAccountNumber)) {
+            $recipientAccountNumber = $this->getConnector()->getConfigurationValue('account_number');
+        }
+        $recipientAccountName = $this->getMappedFieldOrNull('account_owner');
+        if(true == is_null($recipientAccountName)) {
+            $recipientAccountName = $this->getConnector()->getConfigurationValue('account_owner');
+        }
+
+        if(is_null($recipientAccountName) || is_null($recipientAccountNumber)) {
             $this->setServiceId(1012);
             $macFields = array($this->getServiceId(), $this->getVersion(), $this->getVendorId(), $this->getTransactionId(),
                 $this->getAmount(), $this->getCurrency(),
                 $this->getReferenceNumber(), $this->getComment(), $urlReturn, $urlCancel);
         } else {
-            $this->setServiceId(1011);
+            $this
+                ->setRecipientAccount($recipientAccountNumber)
+                ->setRecipientName($recipientAccountName)
+                ->setServiceId(1011);
             $macFields = array($this->getServiceId(), $this->getVersion(), $this->getVendorId(), $this->getTransactionId(),
                 $this->getAmount(), $this->getCurrency(), $this->getRecipientAccount(), $this->getRecipientName(),
                 $this->getReferenceNumber(), $this->getComment(), $urlReturn, $urlCancel);
@@ -81,7 +91,6 @@ class SwedbankPaymentRequest extends AbstractIPizzaPaymentRequest
         $signature = null;
         openssl_sign($macData, $signature, $privateKey, OPENSSL_ALGO_SHA1);
         $formData["VK_MAC"] = base64_encode($signature);
-
         return $formData;
     }
 }

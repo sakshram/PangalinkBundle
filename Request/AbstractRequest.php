@@ -78,6 +78,18 @@ abstract class AbstractRequest
         return $this->getUnmappedField($realKey);
     }
 
+    /**
+     * @return mixed
+     */
+    public function getMappedFieldOrNull($key)
+    {
+        $result = null;
+        try {
+            $result = $this->getMappedField($key);
+        } catch(\Exception $e) {}
+        return $result;
+    }
+
     public function setUnmappedField($key, $value)
     {
         $this->formFields[$key] = $value;
