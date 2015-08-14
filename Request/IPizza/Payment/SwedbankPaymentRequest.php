@@ -33,7 +33,6 @@ class SwedbankPaymentRequest extends AbstractIPizzaPaymentRequest
             ->setLanguage('EST')
             ->setEncoding('UTF-8')
             ->setServiceUrl($this->connector->getServiceUrl())
-            ->setServiceId('1011')
             ->setVersion('008')
             ->setUrlReturn($this->getUrlReturnOrNull())
             ->setUrlCancel($this->getUrlCancelOrNull())
@@ -42,8 +41,22 @@ class SwedbankPaymentRequest extends AbstractIPizzaPaymentRequest
 
     public function getFormData()
     {
-        $formData = $this->formFields;
+        $urlReturn = $this->getUrlReturnOrNull();
+        $urlCancel = $this->getUrlCancelOrNull();
 
+        if(is_null($this->getRecipientAccount()) || is_null($this->getRecipientName())) {
+            $this->setServiceId(1012);
+            $macFields = array($this->getServiceId(), $this->getVersion(), $this->getVendorId(), $this->getTransactionId(),
+                $this->getAmount(), $this->getCurrency(),
+                $this->getReferenceNumber(), $this->getComment(), $urlReturn, $urlCancel);
+        } else {
+            $this->setServiceId(1011);
+            $macFields = array($this->getServiceId(), $this->getVersion(), $this->getVendorId(), $this->getTransactionId(),
+                $this->getAmount(), $this->getCurrency(), $this->getRecipientAccount(), $this->getRecipientName(),
+                $this->getReferenceNumber(), $this->getComment(), $urlReturn, $urlCancel);
+        }
+
+        $formData = $this->formFields;
         $datetime = $this->getDateTime();
         if ($datetime instanceof \DateTime) {
             $strtime = sprintf('%sT%s',
@@ -53,14 +66,9 @@ class SwedbankPaymentRequest extends AbstractIPizzaPaymentRequest
             $datetime = $strtime;
             $formData[$this->formFieldsMapping[AbstractPaymentRequest::FORM_FIELD_DATETIME]] = $datetime;
         }
+        $macFields[] = $datetime;
 
-        $urlReturn = $this->getUrlReturnOrNull();
-        $urlCancel = $this->getUrlCancelOrNull();
 
-        $macFields = array($this->getServiceId(), $this->getVersion(), $this->getVendorId(), $this->getTransactionId(),
-            $this->getAmount(), $this->getCurrency(), $this->getRecipientAccount(), $this->getRecipientName(),
-            $this->getReferenceNumber(), $this->getComment(), $urlReturn, $urlCancel,
-            $datetime);
         $macData = array_map(function ($macField) {
             return sprintf('%s%s',
                 str_pad(mb_strlen($macField, "UTF-8"), 3, "0", STR_PAD_LEFT),

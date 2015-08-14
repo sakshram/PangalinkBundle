@@ -94,7 +94,7 @@ class NordeaPaymentRequest extends AbstractSoloPaymentRequest
         $macData = implode('&', $macData);
         $macData .= '&';
 
-        $formData["SOLOPMT_MAC"] = strtoupper(sha1($macData));
+        $formData["SOLOPMT_MAC"] = strtoupper(md5($macData));
         return $formData;
     }
 
