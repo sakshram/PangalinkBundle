@@ -44,8 +44,7 @@ abstract class AbstractIPizzaPaymentRequest extends AbstractPaymentRequest
             ->setServiceUrl($this->connector->getServiceUrl())
             ->setVersion('008')
             ->setUrlReturn($this->getUrlReturnOrNull())
-            ->setUrlCancel($this->getUrlCancelOrNull())
-        ;
+            ->setUrlCancel($this->getUrlCancelOrNull());
     }
 
     public function getPrivateKey()
@@ -59,15 +58,15 @@ abstract class AbstractIPizzaPaymentRequest extends AbstractPaymentRequest
         $urlCancel = $this->getUrlCancelOrNull();
 
         $recipientAccountNumber = $this->getMappedFieldOrNull('account_number');
-        if(true == is_null($recipientAccountNumber)) {
+        if (true == is_null($recipientAccountNumber)) {
             $recipientAccountNumber = $this->getConnector()->getConfigurationValue('account_number');
         }
         $recipientAccountName = $this->getMappedFieldOrNull('account_owner');
-        if(true == is_null($recipientAccountName)) {
+        if (true == is_null($recipientAccountName)) {
             $recipientAccountName = $this->getConnector()->getConfigurationValue('account_owner');
         }
 
-        if(is_null($recipientAccountName) || is_null($recipientAccountNumber)) {
+        if (is_null($recipientAccountName) || is_null($recipientAccountNumber)) {
             $this->setServiceId(1012);
             $macFields = array($this->getServiceId(), $this->getVersion(), $this->getVendorId(), $this->getTransactionId(),
                 $this->getAmount(), $this->getCurrency(),

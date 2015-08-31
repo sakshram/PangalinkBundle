@@ -16,35 +16,35 @@ use TFox\PangalinkBundle\Response\IPizza\Payment\SampoPaymentResponse;
 class SampoConnector extends AbstractIPizzaConnector
 {
     protected $serviceUrl = 'https://www2.danskebank.ee/ibank/pizza/pizza';
-    
-    public function createPaymentRequest() 
+
+    public function createPaymentRequest()
     {
-	$request = new SampoPaymentRequest($this);
-	$request->initFormFields();	
-	return $request;
+        $request = new SampoPaymentRequest($this);
+        $request->initFormFields();
+        return $request;
     }
-    
-    public function createPaymentResponse(Request $request) {
-	$response = new SampoPaymentResponse($this, $request);
-	return $response;
-    }
-    
-    public function getBankId() 
+
+    public function createPaymentResponse(Request $request)
     {
-	return PangalinkService::ID_BANK_SAMPO;
+        $response = new SampoPaymentResponse($this, $request);
+        return $response;
     }
-    
-    public function getButtonImagesMapping() 
+
+    public function getBankId()
     {
-	return array(
-	    '88x31' => 'danske_1.gif',
-	    '88_31_anim' => 'danske_2.gif',
-	    '120x60_1' => 'danske_3.gif',
-	    '120x60_2' => 'danske_5.png',
-	    '180x70' => 'danske_4.gif'
-	);
+        return PangalinkService::ID_BANK_SAMPO;
     }
-    
-    
+
+    public function getButtonImagesMapping()
+    {
+        return array(
+            '88x31' => 'danske_1.gif',
+            '88_31_anim' => 'danske_2.gif',
+            '120x60_1' => 'danske_3.gif',
+            '120x60_2' => 'danske_5.png',
+            '180x70' => 'danske_4.gif'
+        );
+    }
+
 
 }

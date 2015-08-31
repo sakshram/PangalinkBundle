@@ -169,11 +169,13 @@ abstract class AbstractPaymentRequest extends AbstractRequest
         $urlReturn = null;
         try {
             $urlReturn = $this->getUrlReturn();
-        } catch(\Exception $e) {}
-        if(true == is_null($urlReturn)) {
+        } catch (\Exception $e) {
+        }
+        if (true == is_null($urlReturn)) {
             try {
                 $urlReturn = $this->connector->generateReturnUrl();
-            } catch(\Exception $e) {}
+            } catch (\Exception $e) {
+            }
         }
         return $urlReturn;
     }
@@ -183,11 +185,13 @@ abstract class AbstractPaymentRequest extends AbstractRequest
         $urlCancel = null;
         try {
             $urlCancel = $this->getUrlCancel();
-        } catch(\Exception $e) {}
-        if(true == is_null($urlCancel)) {
+        } catch (\Exception $e) {
+        }
+        if (true == is_null($urlCancel)) {
             try {
                 $urlCancel = $this->connector->generateCancelUrl();
-            } catch(\Exception $e) {}
+            } catch (\Exception $e) {
+            }
         }
         return $urlCancel;
     }

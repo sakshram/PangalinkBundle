@@ -1,37 +1,38 @@
 {
-	"name" : "tfox/pangalink-bundle",
-	"type" : "symfony-bundle",
-	"description" : "Adds a functionality for making payments in Estonia using Banklink (Pangalink) transfer",
-	"keywords" : [
-		"banklink",
-		"pangalink",
-		"estonia"
-	],
-	"homepage" : "http://github.com/tasmanianfox/PangalinkBundle",
-	"license" : "MIT",
-	"authors" : [{
-			"name" : "Sergei Belyakov",
-			"email" : "tasmanianfox@gmail.com"
-		}
-	],
-	"require" : {
-		"symfony/framework-bundle" : "~2.3",
-		"symfony/assetic-bundle" : "~2.3"
-	},
-	"require-dev" : {
-		"symfony/class-loader" : "*",
-		"symfony/yaml" : "*",
-		"sensio/framework-extra-bundle" : "*"
-	},
-	"autoload" : {
-		"psr-0" : {
-			"TFox\\PangalinkBundle" : ""
-		}
-	},
-	"target-dir" : "TFox/PangalinkBundle",
-	"extra" : {
-		"branch-alias" : {
-			"dev-master" : "2.0-dev"
-		}
-	}
+  "name": "tfox/pangalink-bundle",
+  "type": "symfony-bundle",
+  "description": "Adds a functionality for making payments in Estonia using Banklink (Pangalink) transfer",
+  "keywords": [
+    "banklink",
+    "pangalink",
+    "estonia"
+  ],
+  "homepage": "http://github.com/tasmanianfox/PangalinkBundle",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Sergei Belyakov",
+      "email": "tasmanianfox@gmail.com"
+    }
+  ],
+  "require": {
+    "symfony/framework-bundle": "~2.3",
+    "symfony/assetic-bundle": "~2.3"
+  },
+  "require-dev": {
+    "symfony/class-loader": "*",
+    "symfony/yaml": "*",
+    "sensio/framework-extra-bundle": "*"
+  },
+  "autoload": {
+    "psr-0": {
+      "TFox\\PangalinkBundle": ""
+    }
+  },
+  "target-dir": "TFox/PangalinkBundle",
+  "extra": {
+    "branch-alias": {
+      "dev-master": "2.0-dev"
+    }
+  }
 }

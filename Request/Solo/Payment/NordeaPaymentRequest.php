@@ -41,8 +41,7 @@ class NordeaPaymentRequest extends AbstractSoloPaymentRequest
             ->setReferenceNumber('')
             ->setLanguage('EST')
             ->setServiceUrl($this->connector->getServiceUrl())
-            ->setVersion('0003')
-        ;
+            ->setVersion('0003');
 
     }
 
@@ -77,8 +76,8 @@ class NordeaPaymentRequest extends AbstractSoloPaymentRequest
     public function getFormData()
     {
         $formData = $this->formFields;
-        $formData = array_map(function($element) {
-            if(true == is_string($element)) {
+        $formData = array_map(function ($element) {
+            if (true == is_string($element)) {
                 $element = CharsetHelper::utf8ToIso88591($element);
             }
             return $element;

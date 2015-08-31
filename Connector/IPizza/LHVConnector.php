@@ -16,30 +16,31 @@ use Symfony\Component\HttpFoundation\Request;
 class LHVConnector extends AbstractIPizzaConnector
 {
     protected $serviceUrl = 'https://www.lhv.ee/banklink';
-    
-    public function getBankId() 
+
+    public function getBankId()
     {
-	return PangalinkService::ID_BANK_LHV;
+        return PangalinkService::ID_BANK_LHV;
     }
-    
-    public function createPaymentResponse(Request $request) {
-	$response = new LHVPaymentResponse($this, $request);
-	return $response;
-    }
-    
-    public function createPaymentRequest() 
+
+    public function createPaymentResponse(Request $request)
     {
-	$request = new LHVPaymentRequest($this);
-	$request->initFormFields();	
-	return $request;
+        $response = new LHVPaymentResponse($this, $request);
+        return $response;
     }
-    
-    
-    public function getButtonImagesMapping() 
+
+    public function createPaymentRequest()
     {
-	return array(
-	    '88x31' => 'lhv_1.png',
-	    '120x60' => 'lhv_2.png'
-	);
+        $request = new LHVPaymentRequest($this);
+        $request->initFormFields();
+        return $request;
+    }
+
+
+    public function getButtonImagesMapping()
+    {
+        return array(
+            '88x31' => 'lhv_1.png',
+            '120x60' => 'lhv_2.png'
+        );
     }
 }

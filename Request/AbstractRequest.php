@@ -86,7 +86,8 @@ abstract class AbstractRequest
         $result = null;
         try {
             $result = $this->getMappedField($key);
-        } catch(\Exception $e) {}
+        } catch (\Exception $e) {
+        }
         return $result;
     }
 

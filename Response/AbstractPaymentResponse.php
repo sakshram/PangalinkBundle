@@ -6,16 +6,16 @@ namespace TFox\PangalinkBundle\Response;
  */
 abstract class AbstractPaymentResponse extends AbstractResponse
 {
-   const PROPERTY_TRANSACTION_ID = 'transaction_id';
-   const PROPERTY_REFERENCE_NUMBER = 'reference_number';
+    const PROPERTY_TRANSACTION_ID = 'transaction_id';
+    const PROPERTY_REFERENCE_NUMBER = 'reference_number';
 
-   public function getTransactionId()
-   {
-       return $this->getMappedProperty(AbstractPaymentResponse::PROPERTY_TRANSACTION_ID);
-   }
-   
-   public function getReferenceNumber()
-   {
-       return $this->getMappedProperty(AbstractPaymentResponse::PROPERTY_REFERENCE_NUMBER);
-   }
+    public function getTransactionId()
+    {
+        return $this->getMappedProperty(AbstractPaymentResponse::PROPERTY_TRANSACTION_ID);
+    }
+
+    public function getReferenceNumber()
+    {
+        return $this->getMappedProperty(AbstractPaymentResponse::PROPERTY_REFERENCE_NUMBER);
+    }
 }

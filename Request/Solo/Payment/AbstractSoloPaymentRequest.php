@@ -99,7 +99,7 @@ abstract class AbstractSoloPaymentRequest extends AbstractPaymentRequest
     {
         try {
             $urlReject = $this->getUrlReject();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $urlReject = $this->connector->generateRejectUrl();
         }
         return $urlReject;
