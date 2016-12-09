@@ -41,6 +41,9 @@ class NordeaPaymentRequest extends AbstractSoloPaymentRequest
             ->setReferenceNumber('')
             ->setLanguage('EST')
             ->setServiceUrl($this->connector->getServiceUrl())
+            ->setUrlReturn($this->getUrlReturnOrNull())
+            ->setUrlCancel($this->getUrlCancelOrNull())
+            ->setUrlReject($this->getUrlRejectOrNull())
             ->setVersion('0003');
 
     }
@@ -93,7 +96,7 @@ class NordeaPaymentRequest extends AbstractSoloPaymentRequest
         $macData = implode('&', $macData);
         $macData .= '&';
 
-        $formData["SOLOPMT_MAC"] = strtoupper(md5($macData));
+        $formData["SOLOPMT_MAC"] = strtoupper(sha1($macData));
         return $formData;
     }
 
