@@ -21,7 +21,7 @@ Installation
 <pre><code>
 "require": {
   ...
-  "tfox/pangalink-bundle": "2.0.*@dev"
+  "sakshram/pangalink-bundle": "2.*@dev"
   ...
 </code></pre>
 * Run "php composer.phar update"

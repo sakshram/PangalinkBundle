@@ -16,7 +16,7 @@
     }
   ],
   "require": {
-    "symfony/framework-bundle": "~2.3",
+    "symfony/framework-bundle": "3.*",
     "symfony/assetic-bundle": "~2.3"
   },
   "require-dev": {
@@ -32,7 +32,7 @@
   "target-dir": "TFox/PangalinkBundle",
   "extra": {
     "branch-alias": {
-      "dev-master": "2.0-dev"
+      "dev-master": "3.0-dev"
     }
   }
 }
