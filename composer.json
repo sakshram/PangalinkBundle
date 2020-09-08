@@ -1,5 +1,5 @@
 {
-  "name": "tfox/pangalink-bundle",
+  "name": "sakshram/pangalinks",
   "type": "symfony-bundle",
   "description": "Adds a functionality for making payments in Estonia using Banklink (Pangalink) transfer",
   "keywords": [
