@@ -16,8 +16,8 @@
     }
   ],
   "require": {
-    "symfony/framework-bundle": "3.*",
-    "symfony/assetic-bundle": "~2.3"
+    "symfony/symfony": "3.4.*",
+    "symfony/assetic-bundle": "2.*"
   },
   "require-dev": {
     "symfony/class-loader": "*",
