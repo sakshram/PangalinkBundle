@@ -7,11 +7,11 @@
     "pangalink",
     "estonia"
   ],
-  "homepage": "http://github.com/tasmanianfox/PangalinkBundle",
+  "homepage": "https://github.com/sakshram/pangalinks",
   "license": "MIT",
   "authors": [
     {
-      "name": "Sergei Belyakov",
+      "name": "Previous author",
       "email": "tasmanianfox@gmail.com"
     }
   ],
@@ -29,7 +29,7 @@
       "TFox\\PangalinkBundle": ""
     }
   },
-  "target-dir": "sakshram/pangalinks",
+  "target-dir": "TFox/PangalinkBundle",
   "extra": {
     "branch-alias": {
       "dev-master": "3.0-dev"
